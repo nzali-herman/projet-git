@@ -1,0 +1,13 @@
+body{
+    background-color: brown;
+    background-image: url("img/image.jpg");
+    background-size:cover;
+}
+
+h1, p{
+    color: white;
+}
+.col1{
+    background-color:orange ;
+    opacity: 0.7;
+}
