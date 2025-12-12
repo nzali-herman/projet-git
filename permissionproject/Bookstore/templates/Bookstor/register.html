@@ -1,0 +1,82 @@
+
+
+{% extends 'Bookstor/base.html' %}
+{% load static %}
+{% block body %}
+<div class="">
+       <div class="log h-25 ">
+        <br><br><br>
+
+
+        <div class="container-fluid col-lg-9 col-md-9 col-sm-9 col-xl- col-xxl-9 ">
+
+            <div class="row justify-content-center align-items-center ">
+                <div class="col-lg-4 bg-warning bg-opacity-75 col-md-4 col-sm-4 col-xl-4 col-xxl-4 mt-3 redirection-login2" style="background-image: url('/static/lien/img/patri.webp'); background-size: 120px; background-repeat: no-repeat; background-position: center; ">
+                    <br><br>
+                    <center>
+                        <h1 class="fw-bold text-dark fs-2">Bon retour parmis nous!</h1>
+                        <br><br> <br><br><br> <br><br> <br>
+
+                        <p class="text-dark">Vous avez déjà un compte ? <br> Cliquez ici pour vous connecter à votre
+                            compte.</p>
+
+                        
+                        <a href="{% url 'home' %}" class="text-dark"> <button class="border-0 button-log ">Se
+                                connecter</button></a>
+                        <br><br>
+                    </center>
+
+
+
+
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-5 col-xl-5 col-xxl-5 mt-3 bg-dark bg-opacity-50 login2">
+                  <br>
+                    <center><span class="fa fa-user fs-1 text-warning "></span>
+                        <h1 class="fw-bold fs-1 text-light">S'inscrire</h1>
+                        {% for message in messages %}
+                        <strong class="text-warning fw-bold"> {{message}}</strong>
+                        {% endfor %}
+                        
+
+                    </center>
+                    
+
+                    <form action="{% url 'register' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="username" id="username" placeholder="Entrez votre nom d'utilisateur "
+                            class="float-end w-75 p-2 bg-dark bg-opacity-75 bouton-register me-5 rounded border-0 "
+                            required>
+                        <br><br><br>
+
+                        <input type="email" name="email" id="Email" placeholder="Entrez votre adresse email"
+                            class="float-end w-75 p-2 bg-dark bg-opacity-75 bouton-register me-5 rounded border-0"
+                            required>
+                        <br><br><br>
+                        <input type="password" name="password" id="password" placeholder="Entrez votre mot de passe "
+                            class="float-end w-75 p-2 bg-dark bg-opacity-75 bouton-register me-5 rounded border-0 "
+                            required>
+                        <br><br><br>
+                        <input type="password" name="password1" id="password1"
+                            placeholder="Confirmez votre mot de passe"
+                            class="float-end w-75 p-2 bg-dark bg-opacity-75 bouton-register me-5 rounded border-0 "
+                            required>
+                        <br><br>
+                        <br><br>
+                        <center><button type="submit"
+                                class=" button-log border-0 bg-success text-light p-2">S'inscrire</button>
+                        </center>
+                        <br><br>
+                    </form>
+
+                </div>
+
+            </div>
+
+
+        </div>
+        <br>
+    </div>
+    
+</div>   
+{% endblock %}

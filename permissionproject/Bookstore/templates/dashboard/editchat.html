@@ -1,0 +1,60 @@
+{% extends 'dashboard/base.html' %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-1" style="color: red">
+    </div>
+    <div class="col-sm-3" style="color: red">
+      <p style="color: blue"></p>
+    </div>
+
+
+
+    <div class="col-sm-6" style="padding-top: 30px;">
+      <div class="card">
+      </div>
+
+
+      <div class="card "><br><br>
+        <div class="card-body">
+
+          <div class="row bg-warning " style="color: black;">
+            <div class="card col-sm-12">
+              <div class="card-header text-primary">
+                <center>Bienvenue dans le groupe de discussion II-Dossiers</center>
+              </div>
+            </div>
+
+            <div class="col-sm-8">
+              <div class="myform">
+                <form method="POST">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+
+                  <br><input type="submit" value="Poster" class="btn btn-lg btn-outline-primary">
+                </form>
+              </div>
+
+              <div class="col-sm-4"></div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+    <div class="col-sm-2" style="color: red">
+    </div>
+
+  </div>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,122 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+
+
+{% block content %}
+<div class="col-md-2  " style="color: red ">
+</div>
+<div > 
+    
+<div class="col-md-12 col-sm-12 col-xs-12    "  style="height:700px;  background-size: cover;z-index: 0; background-image:url('/static/lien/img/just.jpg') ;background-size: 400px; background-repeat: no-repeat; background-position: center; background-attachment: fixed; "  >
+
+
+    <div id="content-wrapper">
+        <div class="container-fluid "><br>
+       
+            <!-- <li>
+                <center> <img class="float-lg-end" style="width: 180px; ;" src="{% static 'lien/img/administrateur.jpg' %}" alt=""></center>
+             </li> <br> -->
+            <!-- Icon Cards--> 
+            <div class="row">
+     
+
+                <div class="col-xl-2 col-sm-6 mb-3 ">
+                    <div class="card cardstatistique text-white  bg-primary  o-hidden h-100" id="card" style="opacity: 0.6;">
+                        <div class="card-body">
+                            <div class="card-body-icon">
+                                <i class="fas fa-fw fa-book"></i>
+                            </div>
+                            <div class="mr-5"> <strong>Dossiers</strong> : {{ book }}</div>
+                        </div>
+                        <a class="card-footer text-white clearfix small z-1" href="#">
+                            <span class="float-left">Total dossiers</span><br>
+                            <span class="float-right">
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-xl-2 col-sm-6 mb-3">
+                    <div class="card cardstatistique  text-white  bg-warning o-hidden h-100"  >
+                        <div class="card-body">
+                            <div class="card-body-icon">
+                                <i class="fas fa-user-circle fa-fw"></i>
+                            </div>
+                            <div class="mr-5"> <strong>Utilisateurs</strong> : {{ user }}</div>
+                        </div>
+                        <a class="card-footer text-white clearfix small z-1" href="">
+                            <span class="float-left">Total Utilisateurs</span><br>
+                            <span class="float-right">
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-sm-6 mb-3">
+                    <div class="card  cardstatistique text-white container-fluid bg-danger text-light  o-hidden h-100"  >
+                        <div class="card-body">
+                            <div class="card-body-icon">
+                                <i class="fas fa-user-circle fa-fw text-warning"></i>
+                            </div>
+                            <div class="mr-5"> <strong>Demande de suppression</strong> : {{ feed }}</div>
+                        </div>
+                        <a class="card-footer text-light clearfix small z-1" href="">
+                            <span class="float-left">Total demande</span><br>
+                            <span class="float-right">
+                            </span>
+                        </a>
+                    </div>
+                    
+                    
+                </div>
+                <div class="col-xl-4 col-sm-6 mb-3">
+                    <div class="card  cardstatistique text-white container-fluid bg-warning o-hidden h-100"  >
+                        <div class="card-body">
+                            <div class="card-body-icon">
+                                <i class="fas fa-user-circle fa-fw"></i>
+                            </div>
+                            <div class="mr-5"> <strong>Discussion de groupe</strong> : {{ chat }}</div>
+                        </div>
+                        <a class="card-footer text-white clearfix small z-1" href="">
+                            <span class="float-left">Total messages</span><br>
+                            <span class="float-right">
+                            </span>
+                        </a>
+                    </div>
+                    
+                </div>
+                <div class="col-xl-4 col-sm-6 mb-3">
+                    <div class="card  cardstatistique text-white  bg-success o-hidden h-100"  >
+                        <div class="card-body">
+                            <div class="card-body-icon">
+                                <i class="fas fa-user-circle fa-fw"></i>
+                            </div>
+                            <div class="mr-5"> <strong>Commentaires des utilisateurs </strong> : {{ feedback }}</div>
+                        </div>
+                        <a class="card-footer text-white clearfix small z-1" href="">
+                            <span class="float-left">Total commentaires</span><br>
+                            <span class="float-right">
+                            </span>
+                        </a>
+                    </div>
+                    
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+
+   
+
+</div>
+<div style="width:40%; margin: auto ; margin-top: 350px;" class=" fixed-top  " style="float: right;">
+    <canvas id="myChart"></canvas>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+{% endblock %}

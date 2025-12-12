@@ -1,0 +1,1304 @@
+{% extends 'Bookstor/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* Animation générale pour les éléments */
+    .card,
+    .section,
+    .text-block {
+        opacity: 0;
+        transform: translateY(50px);
+        transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+
+    .card.visible,
+    .section.visible,
+    .text-block.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Mise en page avec image à gauche et texte à droite */
+    .row.text-image-section {
+        margin-bottom: 60px;
+    }
+
+    .text-block {
+        padding: 20px;
+        background: #f8f9fa;
+        color: #333;
+        border-radius: 15px;
+        
+        transition: transform 0.5s ease-in-out;
+    }
+
+    .text-block:hover {
+        transform: scale(1.05);
+    }
+
+    .text-block h3 {
+        font-size: 2rem;
+        color: #0d6efd;
+        /* Bleu Bootstrap */
+        transition: color 0.3s ease;
+    }
+
+    .text-block p {
+        font-size: 1.2rem;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    /* Animation de texte qui s'écrit automatiquement */
+    .text-typing {
+        font-size: 1.2rem;
+        white-space: nowrap;
+        overflow: hidden;
+        border-right: .15em solid #333;
+        width: 0;
+        animation: typing 4s steps(30) 1s forwards, blink 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+        from {
+            width: 0;
+        }
+
+        to {
+            width: 100%;
+        }
+    }
+
+    @keyframes blink {
+        50% {
+            border-color: transparent;
+        }
+    }
+
+    /* Couleurs dynamiques et changements de fond */
+    .bg-dynamic-blue {
+        background: #0d6efd;
+        /* Bleu Bootstrap */
+        color: white;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .bg-dynamic-yellow {
+        background: #ffc107;
+        /* Jaune Bootstrap */
+        color: black;
+        transition: background 0.3s ease-in-out;
+    }
+
+    /* Effet de survol sur les sections */
+    .bg-dynamic-blue:hover {
+        background: #0056b3;
+        /* Bleu plus foncé au survol */
+    }
+
+    .bg-dynamic-yellow:hover {
+        background: #e0a800;
+        /* Jaune plus foncé au survol */
+    }
+
+    /* Effect de parallax pour la section de fond */
+    .parallax {
+        background-image: url('images/background.jpg');
+        height: 400px;
+        background-attachment: fixed;
+        background-size: cover;
+        filter: brightness(0.6);
+    }
+
+    /* Cartes avec une animation au survol */
+    .card {
+        border-radius: 15px;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Section en alternance pour ajouter plus de dynamisme */
+    .section-propos:nth-of-type(odd) .text-block {
+        background-color: #fff;
+    }
+
+    .section-propos:nth-of-type(even) .text-block {
+        /* background-color: #f1f1f1; */
+        background-color: #fff;
+    }
+
+    /* Style pour la section des informations du projet */
+    .info-section {
+        background: #f1f1f1;
+        padding: 30px 0;
+    }
+
+    .info-section h2 {
+        font-size: 2rem;
+        color: #0d6efd;
+    }
+
+    .info-section p {
+        font-size: 1.2rem;
+        color: #333;
+        line-height: 1.6;
+    }
+</style>
+</head>
+
+<body>
+    <br><br>
+    <!-- Section Hero avec couleur dynamique -->
+    <div class="hero-section  text-center py-5">
+        <h1 class="display-3 text-white">À propos de notre Projet</h1>
+        <p class="lead text-white">Une solution innovante pour la gestion des dossiers judiciaires, sécurisée et
+            intuitive.</p>
+    </div>
+
+    <!-- Section Informations sur le projet -->
+    <div class="info-section text-center">
+        <div class="container">
+            <h2>Informations sur l'application</h2>
+            <p>Cette application a été lancée en 2025, avec pour objectif de simplifier la gestion des dossiers
+                judiciaires tout en garantissant un haut niveau de sécurité. Notre application offre une interface
+                intuitive permettant aux utilisateurs de suivre l'évolution des dossiers en temps réel, avec une gestion
+                complète des données sensibles.</p>
+            <p>Elle a été développée en réponse aux besoins croissants du secteur judiciaire en matière de
+                digitalisation et d'automatisation des processus administratifs. Grâce à un système de notifications en
+                temps réel et des fonctionnalités de recherche avancée, cette application vise à améliorer l'efficacité
+                des professionnels du droit.</p>
+            <p><strong>Date de lancement :</strong> Janvier 2025</p>
+            <p><strong>Version actuelle :</strong> 1.0.0</p>
+        </div>
+    </div>
+
+ <!-- Section Mission avec animation -->
+ <div class="section-propos container mt-5">
+    <div class="row text-image-section ">
+
+      
+        <div class="col-lg-6 col-md-12 mb-4 container-fluid">
+            <center><img src="{% static 'lien/img/balance.jpg' %}" class="img-fluid rounded w-50 "
+                    alt="Suivi des Cas"></center>
+        </div>
+    </div>
+</div>
+    <div class="container-fluid">
+        <div class="col-lg-6 col-md-12 text-block  container-fluid">
+            <h3>Notre Mission</h3>
+            <p class="text-">Notre mission est de rendre les processus judiciaires <br> plus fluides et 
+                transparents grâce à une solution de gestion <br>des dossiers efficace,fiable et accessible.</p>
+        </div>
+<br><br>
+    </div>
+   
+
+    <!-- Section Fonctionnalités avec effets -->
+    <div class="section-propos">
+        <h2 class="text-center mb-4 text-warning mt-5">Fonctionnalités Clés</h2>
+        <div class="container">
+            <div class="row text-image-section">
+                <div class="col-md-6 order-md-2 text-block bg-dynamic-blue">
+                    <h3>Suivi des Dossiers</h3>
+                    <p>Un tableau de bord interactif pour suivre l'évolution des dossiers juridiques, avec des
+                        notifications en temps réel pour les étapes importantes.</p>
+                </div>
+                <div class="col-md-6 order-md-1">
+                    <center><span class="fa fa-table mt-4 span-propos text-primary"></span></center>
+                </div>
+            </div>
+            <div class="row text-image-section">
+                <div class="col-md-6 text-block bg-dynamic-yellow">
+                    <h3>Sécurisation des Données</h3>
+                    <p>Nous garantissons la sécurité maximale pour la gestion des informations sensibles, avec des
+                        protocoles de cryptage avancés.</p>
+                </div>
+                <div class="col-md-6">
+                    <center><img src="{% static 'lien/img/securite_doc.jpg' %}" class="img-fluid mt-5 rounded"
+                            alt="Sécurité Avancée"></center>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Équipe avec fond dynamique -->
+    <div class="section-propos container hero-section2 text-white">
+        <h2 class="text-center mb-4">Rencontrez notre Équipe</h2>
+        <div class="row text-image-section">
+            <div class="col-lg-6 col-md-12 mb-4">
+                <span class="fa fa-male mt-4 span-propos text-warning text-opacity-100"></span>
+            </div>
+            <div class="col-lg-6 col-md-12 text-block ">
+                <h3 class="text-warning">Jean Dupont</h3>
+                <p>Jean est le Développeur principal et s'occupe de l'architecture backend du projet, garantissant que
+                    chaque fonctionnalité fonctionne avec fluidité et efficacité.</p>
+            </div>
+        </div>
+        <div class="row text-image-section">
+            <div class="col-lg-6 col-md-12 order-md-2 text-block bg-dynamic-yellow">
+                <h3 class="text-warning">Marie Leclerc</h3>
+                <p>Chef de projet, elle coordonne les équipes, s'assurant que les délais et les exigences des clients
+                    sont respectés tout au long du développement.</p>
+            </div>
+            <div class="col-lg-6 col-md-12 order-md-1">
+                <span class="fa fa-male mt-4 span-propos text-warning text-opacity-100"></span>
+            </div>
+        </div>
+        <div class="row text-image-section">
+            <div class="col-lg-6 col-md-12 mb-4">
+                <span class="fa fa-male mt-4 span-propos text-warning text-opacity-100"></span>
+            </div>
+            <div class="col-lg-6 col-md-12 text-block bg-dynamic-blue">
+                <h3 class="text-warning">Paul Durand</h3>
+                <p>Designer UX/UI, Paul crée des interfaces utilisateurs modernes et intuitives, rendant l'utilisation
+                    de l'application agréable et facile.</p>
+            </div>
+        </div>
+        <br>
+    </div>
+    <!-- Section dynamique avant le footer -->
+    <div class="container my-5 text-center">
+        <h2 class="display-4 mb-4 text-primary" style="font-family: 'Poppins', sans-serif;">Découvrez l'application en
+            action</h2>
+
+        <!-- Carousel d'images -->
+        <div id="carouselExample" class="carousel slide my-4" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="images/demo1.jpg" class="d-block w-100" alt="Démonstration 1">
+                </div>
+                <div class="carousel-item">
+                    <img src="images/demo2.jpg" class="d-block w-100" alt="Démonstration 2">
+                </div>
+                <div class="carousel-item">
+                    <img src="images/demo3.jpg" class="d-block w-100" alt="Démonstration 3">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Précédent</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Suivant</span>
+            </button>
+        </div>
+
+        <!-- Texte dynamique sur l'application -->
+        <div class="my-4" style="font-family: 'Poppins', sans-serif;">
+            <h3 class="text-secondary">Découvrez toutes les fonctionnalités que nous offrons !</h3>
+            <p class="lead">Notre application vous permet de gérer les dossiers judiciaires avec une interface intuitive
+                et des outils puissants pour une gestion efficace, sécurisée et sans faille.</p>
+        </div>
+
+        <!-- Bouton d'appel à l'action -->
+        <a href="#contact" class="btn btn-primary btn-lg mt-3"
+            style="font-family: 'Poppins', sans-serif;">Contactez-nous pour une démo</a>
+    </div>
+    {% endblock %}
+    ......................................
+    ....................................
+    .........................
+    {% extends 'Bookstor/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+
+<style>
+    :root {
+        --bleu-judiciaire: #0d6efd;
+        --rouge-accent: #dc3545;
+        --transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+
+
+    .animate-card {
+        opacity: 0;
+        transform: translateY(50px) rotateX(45deg);
+        transition: var(--transition);
+    }
+
+    .animated {
+        opacity: 1 !important;
+        transform: translateY(0) rotateX(0) !important;
+    }
+
+    .judicial-card {
+        background: white;
+        border: 2px solid var(--bleu-judiciaire);
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 1rem;
+        box-shadow: 0 10px 30px rgba(13, 110, 253, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .judicial-card::after {
+        content: '';
+        position: absolute;
+        bottom: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, var(--bleu-judiciaire), var(--rouge-accent));
+        opacity: 0;
+        transition: var(--transition);
+        z-index: -1;
+    }
+
+    .judicial-card:hover::after {
+        opacity: 0.1;
+        transform: rotate(15deg);
+    }
+
+
+
+    .float-icon {
+        animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes iconFloat {
+
+        0%,
+        100% {
+            transform: translateY(0) rotate(0);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(10deg);
+        }
+    }
+
+    .scroll-progress {
+        height: 4px;
+        background: var(--rouge-accent);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        transition: width 0.3s ease-out;
+    }
+
+    :root {
+        --bleu: #0d6efd;
+        --jaune: #ffc107;
+        --transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    :root {
+        --justice-blue: #0d6efd;
+        --justice-yellow: #ffc107;
+        --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-jaune {
+        height: 20px;
+        border-radius: 10px;
+        background: #ffe69c;
+    }
+
+
+    .judicial-card {
+        background: white;
+        border: 3px solid var(--bleu);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem;
+        box-shadow: 0 10px 30px rgba(13, 110, 253, 0.1);
+        transition: var(--transition);
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--jaune);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .animate-card {
+        opacity: 0;
+        transform: translateY(50px) rotateX(15deg);
+        transition: var(--transition);
+    }
+
+    .animated {
+        opacity: 1 !important;
+        transform: translateY(0) rotateX(0) !important;
+    }
+
+    .progress-jaune .progress-bar {
+        background: var(--jaune);
+    }
+
+    @keyframes icon-bounce {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    /* kkkkkkkkkkkkkkkk */
+
+    /* Process Timeline */
+    .timeline-track {
+        position: relative;
+        height: 4px;
+        background: var(--justice-yellow);
+        margin: 4rem 0;
+    }
+
+    .timeline-step {
+        position: absolute;
+        top: -25px;
+        width: 50px;
+        height: 50px;
+        background: white;
+        border: 4px solid var(--justice-blue);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+</style>
+</head>
+
+<body>
+
+    <!-- Barre de progression -->
+    <div class="scroll-progress" style="width: 0%;"></div>
+
+    <!-- Section Hero -->
+    <div class=" bg-primary">
+        <section class="min-vh-75 d-flex align-items-center  "
+            id="premiere-accueil-presentation" style="background-image: url('/static/lien/img/herman.webp');">
+            <div class=" row container-fluid ">
+                <div class="row align-items-center">
+
+                    <div class="col-lg-6 text-light ">
+                        <h1 class="display-1 fw-bold mb-4 animate-card"><br>
+                            <i class="fas fa-balance-scale-left float-icon text-warning "></i><br>
+                            Gestion Judiciaire 4.0
+                        </h1>
+                        <p class="lead animate-card  text-light " data-delay="200">Solution complète de gestion numérique des
+                            dossiers légaux sur Intégratiom Intelligente des Dossiers(II-Dossiers)  </p>
+                    </div>
+                    <div class="col-lg-6">
+                        <br><br><br>
+                        <div class="judicial-card animate-card text-warning" data-delay="400">
+
+                            <h3><i class="fas fa-chart-line me-2"></i>Statistiques en Direct</h3>
+                            <div class="row mt-4">
+                                <div class="col-6">
+                                    <div class="display-4 fw-bold">1.5K</div>
+                                    <small>Dossiers actifs</small>
+                                </div>
+                                <div class="col-6">
+                                    <div class="display-4 fw-bold text-success">99.9%</div>
+                                    <small>Disponibilité</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Section Fonctionnalités -->
+    <section class="py-5 bg-light">
+        <div class="container">
+
+            <h2 class="text-center mb-5 display-4 fw-bold animate-card">Fonctionnalités Clés</h2>
+
+            <br>
+            <p>
+                      <y class=" fw-bold">N</y>otre application de gestion des dossiers judiciaires <y
+                            class=" fw-bold">(
+                            II-DOSSIERS )</y> est conçue pour simplifier
+                        et séuriser les gestion de vos dossiers. avec notre solution, vous pouvez accedez à vos dossiers
+                        en
+                        ligne, les consulter et les gérer de manière efficace Notre application east dotée de
+                        Fonctionnalités
+                        avancés telles que la recherche et la Consultation des dossiers, les gestion des pièces jointe
+                        et
+                        des
+                        documents, ainsi que la sécurité et la confidentialité des données.Notre objectif est de vous
+                        aider
+                        géer vos dossiers judiciaires de manière efficace et plus sécurisée, pour que vous puissiez vous
+                        concentrer sur vos activités proncipal.
+
+                        <y>
+            </p>
+            <div class="row g-4 m">
+                <!-- Carte 1 -->
+                <div class=" col-lg-4 col-md-6 col-lg-4 container mt-4"><br>
+                    <!-- Process Timeline -->
+                    <section class="py-5 bg-white">
+                        <div class="container">
+                            <div class="timeline-track">
+                                <div class="timeline-step" style="left: 10%">
+                                    <i class="fas fa-file-import"></i>
+                                </div>
+                                <div class="timeline-step" style="left: 40%">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <div class="timeline-step" style="left: 70%">
+                                    <i class="fas fa-archive"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="judicial-card animate-card">
+                            <div class="icon-wrapper text-primary mb-3">
+                                <i class="fas fa-file-contract fa-3x float-icon"></i>
+                            </div>
+                            <h4>Gestion des Dossiers</h4>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Suivi en temps réel</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Archivage sécurisé</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Recherche intelligente</li>
+                            </ul>
+                        </div>
+                </div>
+                <div class=" col-lg-5 col-md-6 col-lg-4 container">
+
+                    <p class="savoir-faire fs-5 w-100" style="font-family:italic ;">
+                    <p class="mt-4">
+                        <center><img src="{% static 'lien/img/avocate.jpg' %}" alt="Client" class="card-img-top " style="height: 500px;" >
+                        </center>
+                  
+                    </p>
+
+
+
+                    </p>
+
+                    <div class="col-lg-5 col-sm-5 col-xl-5 col-xxl-5 container-fluid mt-5">
+                        <!-- button  redurige vers la page a propos -->
+                        <!--  url 'apropos' -->
+                        <center><a href=""><button
+                                    class="bg-success text-light  fw-bold border-0  p-3 w-100 button-log btn-yellow  ">En
+                                    savoir
+                                    plus</button>
+                            </a>
+                        </center>
+                    </div>
+
+                </div>
+
+
+                <!-- Ajouter 5 cartes supplémentaires avec des animations -->
+            </div>
+        </div>
+
+    </section>
+
+    </section>
+
+    <!-- Key Features Section -->
+    <div class="container py-1  bg-opacity-75">
+        <h2 class="text-center text-dark fw-bold mb-4 mt-4">Nos Fonctionnalités</h2>
+
+
+
+    </div><br><br><br>
+    <!-- section card -->
+    <div class="container bg-light bg-opacity-25">
+        <div class="row ">
+            <div class="col-md-3 container-fluid">
+                <div class="">
+                    <center><img src="{% static 'lien/img/imgpartenaires.jpg' %}" alt="Client" class="card-img-top">
+                    </center>
+                    <div class="card-body">
+                        <h5 class="card-title">Collaboration avec les Avocats</h5>
+                        <p class="card-text">Permettez une collaboration fluide avec les avocats, en partageant des
+                            documents et des notes en temps réel.</p> <br><br><br><br>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 container-fluid ">
+                <div class="">
+
+                    <center><img src="{% static 'lien/img/img_gestiondossier.jpg' %}" alt="Client" class="card-img-top">
+                    </center>
+                    <div class="card-body">
+                        <h5 class="card-title">Gestion des Dossiers</h5>
+                        <p class="card-text">Organisez et suivez vos dossiers facilement grâce à des filtres et des
+                            catégories bien définies.</p> <br><br><br><br>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 container-fluid">
+                <div class="">
+                    <center><img src="{% static 'lien/img/img_document.jpg' %}" alt="Client" class="card-img-top">
+                    </center>
+                    <div class="card-body">
+                        <h5 class="card-title">Suivi des Clients</h5>
+                        <p class="card-text">Gérez les informations de vos clients en ligne de manière centralisée et
+                            sécurisée pour un suivi
+                            optimal.</p> <br><br><br><br>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    
+    <div class="container">
+        <!-- Section Statistiques -->
+        <section class="row g-4 mb-5 container">
+            <!-- Carte 1: Activité Utilisateurs -->
+            <div class="col-md-6 col-lg-4 animate-card container">
+                <div class="judicial-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="stat-icon me-3">
+                            <i class="fas fa-users fa-lg text-white float-icon"></i>
+                        </div>
+                        <h4 class="mb-0">Utilisateurs Actifs</h4>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-end">
+                        <div>
+                            <h2 class="text-primary">1,452</h2>
+                            <div class="progress progress-jaune">
+                                <div class="progress-bar" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <span class="badge bg-warning">+15%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ajouter 19 cartes similaires avec différents contenus -->
+            <!-- Exemple de cartes supplémentaires -->
+            <!-- Carte 2: Dossiers traités -->
+            <div class="col-md-6 col-lg-4 animate-card container">
+                <div class="judicial-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="stat-icon me-3">
+                            <i class="fas fa-folder-open fa-lg text- float-icon"></i>
+                        </div>
+                        <h4 class="mb-0">Dossiers Traités</h4>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-end">
+                        <div>
+                            <h2 class="text-primary">2,890</h2>
+                            <div class="progress progress-jaune">
+                                <div class="progress-bar" style="width: 82%"></div>
+                            </div>
+                        </div>
+                        <span class="badge bg-warning">+27%</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Carte 3: Temps de réponse -->
+            <div class="col-md-6 col-lg-4 animate-card">
+                <div class="judicial-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="stat-icon me-3">
+                            <i class="fas fa-clock fa-lg text-white float-icon"></i>
+                        </div>
+                        <h4 class="mb-0">Temps Réponse Moyen</h4>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-end">
+                        <div>
+                            <h2 class="text-primary">24h</h2>
+                            <div class="progress progress-jaune">
+                                <div class="progress-bar" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        <span class="badge bg-warning">-18%</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Continuer jusqu'à 20 cartes... -->
+        </section>
+    </div>
+    <!-- Testimonials Section -->
+    <div class="container py-5">
+        <h2 class="text-center mb-4">Ce que disent nos utilisateurs</h2>
+        <center><img src="{% static 'lien/img/digit.jpg' %}" alt="Client" class="rounded-circle  img-temoignage mt-5">
+        </center>
+
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card border border-2 border-success">
+                    <div class="card-body">
+                        <p>"Cette application a transformé notre manière de travailler. Elle est simple, efficace et
+                            très
+                            intuitive."</p>
+                        <footer class="blockquote-footer">Marc Dupont, Avocat</footer>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border border-2 border-success">
+                    <div class="card-body">
+                        <p>"Un excellent outil pour gérer des dizaines de dossiers à la fois. Je gagne un temps
+                            précieux!"
+                        </p>
+                        <footer class="blockquote-footer">Sophie Leclerc, Client</footer>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border border-2 border-success">
+                    <div class="card-body">
+                        <p>"Un système de gestion complet, qui m'aide à garder tous mes dossiers organisés et
+                            accessibles en
+                            un clin d'œil."</p>
+                        <footer class="blockquote-footer">Pierre Martin, Gestionnaire</footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% endblock %}
+    .........................
+    ,,,,,,,,,,,,,,,,,,,
+    ,,,,,,,,,,,,
+    <!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="{% static 'lien/css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'lien/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'lien/css/style_service.css' %}">
+  <link rel="stylesheet" href="{% static 'lien/css/fontawesome.css' %}">
+  <link rel="stylesheet" href="{% static 'lien/css/ dataTables.bootstrap4.min.css' %}">
+
+
+</head>
+
+<style>
+  /* style pour navbar responsive */
+.list_toggle {
+display: none;
+color: white;
+}
+
+@media(max-width:600px) {
+ .collapse {
+     position: absolute;
+     top: 100%;
+     left: 0;
+     right: 0;
+     flex-direction: column;
+     
+     text-align: center;
+     gap: 0;
+     overflow: hidden;
+     background-color: #0056b3;
+ }
+ 
+ .nav-item{
+     margin-top: 20px;
+     
+     
+ }
+
+ .list_toggle {
+     display: block;
+ }
+}
+
+#navbarNav {
+ transition: all 0.5s;
+}
+
+</style>
+
+<body>
+
+
+
+
+
+
+
+
+
+
+  <!-- Navbar -->
+  <nav class="navbar  navbar-expand fixed-top alert-primary">
+    <div class="container">
+      <img src="{% static 'lien/img/back.jpg' %}" class="img-logo  rounded-circle" alt="">
+      <a class="navbar-brand fs-4" href="#"
+        style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">II-Dossiers</a>
+      
+
+      <span class="fas fa-bars  list_toggle  fs-2" onclick="toggleMenu()"></span>
+
+
+      <div class="collapse navbar-collapse  " id="navbarNav">
+        <ul class="navbar-nav ms-lg-auto  flex-md-row flex-column text-center ">
+
+          <li class="nav-item"><a class="nav-link" href="{% url 'homeac' %}">Accueil</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'apropos' %}">À Propos</a></li>
+
+          <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
+          {% if user.is_authenticated %}
+
+          <li class="nav-item"><a class="nav-link p-1  bout-log bg-warning border-0 rounded ms-lg-3 "
+              href="/logout">Se deconnecter</a></li> 
+
+          {% else %}
+
+
+          <li class="nav-item"><a class="nav-link p-1 mt-1 bout-log border-0 rounded bg-primary   text-light"
+              href="{% url 'regform' %}">S'inscrire</a></li>
+          <li class="nav-item"><a class=" bg-success nav-link p-1 mt-1 bout-log bg-warning border-0 rounded ms-lg-3 "
+              href="{% url 'home' %}">Se connecter</a></li>
+
+          {% endif %}
+          <!-- <a href="/register"> <button  class="text-light lien_navbar border-0 rounded bg-primary  text-light"></button></a>
+         <a href="/login"><button  class="text-dark lien_navbar bg-warning border-0 rounded"></button> </a>  -->
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class=" bg-light">
+    {% block content %}
+
+    {% endblock %}
+  </div>
+
+  <!-- Pied de page -->
+  <footer class="footer alert-dark ">
+    <p>&copy; 2025 JusticeApp. Tous droits réservés.</p>
+  </footer>
+  <!-- Styles CSS pour les animations -->
+  <style>
+    .feature-card {
+      transition: transform 0.4s ease-in-out, opacity 0.6s ease-in-out;
+    }
+
+    /* Zoom-in Animation */
+    .zoom-in {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+
+    .zoom-in.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Slide-up Animation */
+    .slide-up {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+
+    .slide-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Fade-in Animation */
+    .fade-in {
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+    }
+
+    /* Effet hover */
+    .feature-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+  
+  </style>
+
+  <script src="{% static 'lien/js/jquery.js' %}"></script>
+  <script src="{% static 'lien/js/bootstrap.js' %}"></script>
+  <script src="{% static 'lien/js/service.js' %}"></script>
+  <script src="{% static 'lien/js/fontawesome.js' %}"></script>
+  <script src="{% static 'lien/js/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'lien/js/service.js' %}"></script>
+
+
+
+
+
+
+
+
+  <script>
+    // fonction pour compter les monbre de la page service
+    $(document).ready(function () {
+      $(".counter").each(function () {
+        let $this = $(this);
+        let countTo = $this.attr("data-count");
+        $({ countNum: $this.text() }).animate({
+          countNum: countTo
+        }, {
+          duration: 10000,
+          easing: "linear",
+          step: function () {
+            $this.text(Math.floor(this.countNum));
+          },
+          complete: function () {
+            $this.text(this.countNum);
+          }
+        });
+      });
+
+      $(window).scroll(function () {
+        $(".fade-in").each(function () {
+          if ($(this).offset().top < $(window).scrollTop() + $(window).height() - 50) {
+            $(this).addClass("visible");
+          }
+        });
+      });
+    });
+  </script>
+  <!-- section faq -->
+  <script>
+    $(function () {
+      $('.collapse-accueil').hide();
+      $('.accordion-button').click(function () {
+        $('.collapse-accueil').slideToggle();
+        $('.accordion-button').css('background-color', 'blue')
+        $('.accordion-button').css('color', 'white')
+      });
+    });
+
+  </script>
+
+  <!-- script page d'accueil -->
+  <script>
+    $(document).ready(function () {
+      // Gestion de la barre de progression
+      $(window).scroll(function () {
+        const scroll = $(document).scrollTop();
+        const height = $(document).height() - $(window).height();
+        const progress = (scroll / height) * 100;
+        $('.scroll-progress').css('width', progress + '%');
+
+        // Animation des éléments
+        $('.animate-card').each(function () {
+          const elementTop = $(this).offset().top;
+          const elementBottom = elementTop + $(this).outerHeight();
+          const viewportTop = $(window).scrollTop();
+          const viewportBottom = viewportTop + $(window).height();
+          const delay = $(this).data('delay') || 0;
+
+          if (elementBottom > viewportTop && elementTop < viewportBottom) {
+            setTimeout(() => {
+              $(this).addClass('animated');
+            }, delay);
+          }
+        });
+      });
+
+      // Animation au survol
+      $('.judicial-card').hover(
+        function () {
+          $(this).css('transform', 'translateY(-10px)');
+        },
+        function () {
+          $(this).css('transform', 'translateY(0)');
+        }
+      );
+
+      // Effet parallaxe
+      $(window).scroll(function () {
+        const scrolled = $(window).scrollTop();
+        $('.float-icon').css('transform', `translateY(${scrolled * 0.1}px)`);
+      });
+    });
+  </script>
+  <script>
+
+    $(document).ready(function () {
+      // Configuration des graphiques
+      new Chart(document.getElementById('caseDistribution'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Civil', 'Pénal', 'Administratif'],
+          datasets: [{
+            data: [35, 45, 20],
+            backgroundColor: ['#0d6efd', '#ffc107', '#28a745']
+          }]
+        }
+      });
+
+      // Gestion du scroll
+      $(window).scroll(function () {
+        // Barre de progression
+        const scroll = $(document).scrollTop();
+        const height = $(document).height() - $(window).height();
+        $('.scroll-progress').css('width', (scroll / height) * 100 + '%');
+
+        // Animation des éléments
+        $('.animate-card').each(function () {
+          const elementTop = $(this).offset().top;
+          const viewportBottom = $(window).scrollTop() + $(window).height();
+
+          if (elementTop < viewportBottom - 100) {
+            $(this).addClass('animated');
+            $(this).find('i').css('animation', 'icon-bounce 1.5s infinite');
+          }
+        });
+
+        // Animation de la navbar
+        $('nav').toggleClass('nav-scrolled', $(this).scrollTop() > 50);
+      });
+
+      // Animation au survol
+      $('.judicial-card').hover(
+        function () {
+          $(this).css('transform', 'translateY(-10px)');
+          $(this).find('.stat-icon').css('transform', 'scale(1.1)');
+        },
+        function () {
+          $(this).css('transform', 'translateY(0)');
+          $(this).find('.stat-icon').css('transform', 'scale(1)');
+        }
+      );
+    });
+
+
+
+  </script>
+  <script>
+    // Animation au défilement
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animated', 'visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.animate-entrance').forEach((el) => {
+      observer.observe(el);
+    });
+
+    // Effet parallaxe
+    $(window).scroll(function () {
+      const scrolled = $(window).scrollTop();
+      $('.hero-illu').css('transform', `rotate(${scrolled * 0.2}deg)`);
+    });
+
+    // Compteurs animés
+    $('.stat-bubble h3').each(function () {
+      $(this).prop('Counter', 0).animate({
+        Counter: $(this).text()
+      }, {
+        duration: 2000,
+        easing: 'swing',
+        step: function (now) {
+          $(this).text(Math.ceil(now));
+        }
+      });
+    });
+  </script>
+
+  <!-- script page service -->
+  <script>
+    $(document).ready(function() {
+        // Configuration des graphiques
+        const usersChart = new Chart(document.getElementById('usersChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Avocats', 'Juristes', 'Administration'],
+                datasets: [{
+                    data: [65, 25, 10],
+                    backgroundColor: ['#0d6efd', '#28a745', '#ffc107']
+                }]
+            }
+        });
+
+        // Gestion du scroll
+        $(window).scroll(function() {
+            // Barre de progression
+            const scroll = $(document).scrollTop();
+            const height = $(document).height() - $(window).height();
+            const progress = (scroll / height) * 100;
+            $('.scroll-progress').css('width', progress + '%');
+
+            // Animation des éléments
+            $('.animate-element').each(function() {
+                const elementTop = $(this).offset().top;
+                const elementBottom = elementTop + $(this).outerHeight();
+                const viewportTop = $(window).scrollTop();
+                const viewportBottom = viewportTop + $(window).height();
+
+                if (elementBottom > viewportTop && elementTop < viewportBottom) {
+                    $(this).addClass('animated');
+                    $(this).find('i').css('animation', 'iconPop 0.6s ease-out');
+                }
+            });
+        });
+
+        // Animation au survol
+        $('.judicial-card').hover(
+            function() {
+                $(this).css('transform', 'translateY(-10px) scale(1.02)');
+            },
+            function() {
+                $(this).css('transform', 'translateY(0) scale(1)');
+            }
+        );
+    });
+</script>
+  <script>
+    $(document).ready(function () {
+      // Configuration des graphiques
+      const chartConfig = (type, data) => ({
+        type: type,
+        data: data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom' }
+          }
+        }
+      });
+
+      // Graphique géographique
+      new Chart(document.getElementById('geoChart'), chartConfig('doughnut', {
+        labels: ['Europe', 'Amérique', 'Afrique', 'Asie'],
+        datasets: [{
+          data: [45, 30, 15, 10],
+          backgroundColor: ['#0d6efd', '#ffc107', '#28a745', '#dc3545']
+        }]
+      }));
+
+      // Ajouter d'autres graphiques...
+
+      // Gestion du scroll
+      $(window).scroll(function () {
+        const scroll = $(document).scrollTop();
+        const height = $(document).height() - $(window).height();
+        $('.scroll-progress').css('width', (scroll / height) * 100 + '%');
+
+        $('.animate-pop').each(function () {
+          const elementTop = $(this).offset().top;
+          const viewportBottom = $(window).scrollTop() + $(window).height();
+
+          if (elementTop < viewportBottom - 100) {
+            $(this).addClass('animated');
+          }
+        });
+      });
+
+      // Animation des cartes
+      $('.judicial-card').hover(
+        function () {
+          $(this).css('transform', 'translateY(-10px) rotate(2deg)');
+        },
+        function () {
+          $(this).css('transform', 'translateY(0) rotate(0)');
+        }
+      );
+
+      // Mise à jour dynamique
+      setInterval(() => {
+        $('.user-avatar').toggleClass('bg-primary bg-warning');
+      }, 3000);
+    });
+  </script>
+
+
+  <!-- animate form register -->
+  <script>
+    $('.login2').hide()
+    $('.login2').show(1000)
+  </script>
+
+  <!-- animate form login -->
+  <script>
+    $('.login1').hide()
+    $('.login1').show(1000)
+
+  </script>
+
+  <!-- script page service -->
+  <script>
+    $(document).ready(function () {
+      $(".faq-item").click(function () {
+        $(this).next(".faq-content").slideToggle();
+      });
+
+      // Animation des statistiques
+      $("#stat1, #stat2, #stat3").each(function () {
+        $(this).animate({ num: $(this).text() }, {
+          duration: 2000,
+          step: function (num) {
+            this.innerHTML = Math.floor(num);
+          }
+        });
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+      $(".faq-item").click(function () {
+        $(this).find(".faq-content").slideToggle();
+      });
+    });
+  </script>
+ <!-- script qui rend la nav bar responsive -->
+ <script>
+  let navbar = document.getElementById("navbarNav")
+  navbar.style.maxHeight = "0px";
+
+  function toggleMenu() {
+    if (navbar.style.maxHeight == "0px") {
+      navbar.style.maxHeight = "300px"; localStorage
+    }
+    else {
+      navbar.style.maxHeight = "0px";
+    }
+  }
+</script>
+
+
+
+
+
+
+
+
+  
+</body>
+
+</html>

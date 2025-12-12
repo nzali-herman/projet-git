@@ -1,0 +1,51 @@
+{% extends 'librarian/base.html' %}
+
+
+
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2" style="color: red">
+        </div>
+        <div class="col-lg-10 mb-3">
+            <div class="col-12 mb-3">
+                <div id="content-wrapper">
+                    <div class="container-fluid"> <br>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="">Nom complet : {{ object.title }} </a>
+                        </ol>
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <i class="fas fa-table text-warning"></i>
+                                confirmation de suppression
+                            </div>
+                            <div class="card-body">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <div class="alert alert-warning" role="alert">
+                                                Êtes-vous sûr de vouloir supprimer ce message ? {{ object }} ?
+                                            </div>
+                                            <input type="submit" class="btn btn-danger" value="Oui, supprimez-le." />
+                                            <a class="btn btn-success" href="{% url 'llchat' %}">Non.</a>
+                                        </form>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endblock %}

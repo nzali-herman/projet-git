@@ -1,0 +1,318 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Système de gestion des dossiers judiciaires">
+    <meta name="author" content="">
+    
+    {% block title %}{% endblock %}
+    <title>Gestion dossiers judiciaires | Cameroun</title>
+
+    <style>
+        :root {
+            --cameroon-green: #007a5e;
+            --cameroon-red: #ce1126;
+            --cameroon-yellow: #fcd116;
+            --original-brown: rgba(139, 69, 19, 1);
+            --animation-duration: 0.3s;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+
+    {% block stylesheets %}
+    <style media="screen">
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .header {
+            background-color: var(--original-brown);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar {
+            background-color: var(--original-brown);
+            transition: all var(--animation-duration) ease;
+        }
+
+        .nav-link {
+            transition: all var(--animation-duration) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(252, 209, 22, 0.2);
+            transform: translateX(5px);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--cameroon-yellow);
+            transition: width var(--animation-duration) ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .img-logo {
+            width: 50px;
+            height: 50px;
+            margin-top: 5px;
+            margin-right: 5px;
+            border: 2px solid var(--cameroon-yellow);
+            transition: transform 0.3s ease;
+        }
+
+        .img-logo:hover {
+            transform: rotate(10deg);
+        }
+
+        .btn-cameroon {
+            background: linear-gradient(135deg, var(--cameroon-green), var(--cameroon-red));
+            color: white;
+            border: none;
+            transition: all var(--animation-duration) ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .btn-cameroon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(206, 17, 38, 0.3);
+            color: white;
+        }
+
+        .dropdown-item:active {
+            background-color: var(--cameroon-green);
+        }
+
+        .scroll-to-top {
+            background-color: var(--cameroon-red);
+            color: white;
+        }
+
+        .scroll-to-top:hover {
+            background-color: var(--cameroon-green);
+        }
+
+        /* Effet de vague camerounaise */
+        .cameroon-wave {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(90deg, 
+                var(--cameroon-green) 33%, 
+                var(--cameroon-red) 33% 66%, 
+                var(--cameroon-yellow) 66%);
+            opacity: 0.1;
+            z-index: -1;
+        }
+    </style>
+    {% endblock stylesheets %}
+
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/master.css' %}">
+    <link href="{% static 'css/sb-admin.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    {% block stylesheet %}{% endblock %}
+</head>
+
+<body id="page-top">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand navbar-dark fixed-top header ">
+        <div class="d-flex align-items-center">
+            <a class="navbar-brand mr-1" href="">
+                <img src="{% static 'lien/img/patri.jpg' %}" class="img-logo rounded-circle animate__animated animate__pulse" alt="Logo">
+            </a>
+            <div>
+                <a class="navbar-brand fs-4 text-white" href="{% url 'librarian' %}"
+                  style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">
+                  II-Dossiers
+                </a>
+                
+            </div>
+        </div>
+        
+        <i class="fas fa-bars mx-3 fs-1 text-light cursor-pointer d-md-none"></i>
+
+        <!-- Navbar Search -->
+        <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0"></form>
+       
+        <!-- Navbar -->
+        <ul class="navbar-nav ml-auto ml-md-0">
+            <li class="nav-item dropdown no-arrow">
+                <a class="nav-link dropdown-toggle animate__animated animate__pulse animate__infinite animate__slower" 
+                   href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user-circle fa-fw text-warning"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right animate__animated animate__fadeIn" aria-labelledby="userDropdown">
+                    <a class="dropdown-item">{{ user.username }}</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="" data-toggle="modal" data-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <div id="wrapper" style="padding-top: 50px;">
+        <!-- Sidebar -->
+        <div class="col-gauche" style="z-index: 1000;">
+            <ul class="sidebar mt-4 navbar-nav position-fixed " style=" background-color: rgba(139, 69, 19,1);" >
+                <li class="nav-item active"><br>
+                    <a class="nav-link" href="{% url 'librarian' %}">
+                        <i class="fas fa-fw fa-tachometer-alt text-cameroon-yellow"></i>
+                        <span class="text-white">Tableau de bord consultant </span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="">
+                        <i class="fas fa-user-circle fa-fw text-cameroon-yellow"></i>
+                        <span class="text-white">Connecté comme {{ user.username }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'llchat' %}">
+                        <i class="fas fa-comments text-cameroon-yellow"></i>
+                        <span class="text-white">Discussion de groupe</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'labook_form' %}">
+                        <i class="fas fa-folder-plus text-cameroon-yellow"></i>
+                        <span class="text-white">Ajouter un dossier</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'llbook' %}">
+                        <i class="fas fa-folder-open text-cameroon-yellow"></i>
+                        <span class="text-white">Dossiers récents</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'lluser' %}">
+                        <i class="fas fa-users text-cameroon-yellow"></i>
+                        <span class="text-white">Liste des utilisateurs</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'lfeedback' %}">
+                        <i class="fas fa-comment-dots text-cameroon-yellow"></i>
+                        <span class="text-white">Commentaires</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        {% block body %}{% endblock %}
+        {% block content %} {% endblock content %}
+    </div>
+
+    <!-- Vague décorative camerounaise -->
+    <div class="cameroon-wave"></div>
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded animate__animated animate__fadeInUp" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content animate__animated animate__zoomIn">
+                <div class="modal-header text-white" style="background: linear-gradient(135deg, var(--cameroon-green), var(--original-brown));">
+                    <h5 class="modal-title">Prêt à partir ?</h5>
+                    <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Sélectionnez « Déconnexion » ci-dessous si vous êtes prêt à mettre fin à votre session actuelle.</p>
+                    <div class="text-center my-3">
+                        <i class="fas fa-sign-out-alt fa-3x text-cameroon-red"></i>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
+                    <a class="btn btn-cameroon" href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    {% block scripts %}
+    <script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+    <script src="{% static 'vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Animation au chargement
+        
+
+            // Gestion du menu responsive
+            if ($(window).width() <= 768) {
+                $('.col-gauche, .diagram').hide();
+                $('.fa-bars').click(function() {
+                    $('.col-gauche').toggleClass('animate__fadeInLeft animate__fadeOutLeft');
+                    $('.col-gauche').slideToggle();
+                });
+            }
+
+            // Animation au scroll
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 100) {
+                    $('.scroll-to-top').fadeIn();
+                } else {
+                    $('.scroll-to-top').fadeOut();
+                }
+            });
+        });
+    </script>
+    {% endblock scripts %}
+
+    {% block extrascripts %}{% endblock extrascripts %}
+</body>
+</html>

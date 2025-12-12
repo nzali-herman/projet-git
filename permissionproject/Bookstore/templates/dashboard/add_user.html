@@ -1,0 +1,99 @@
+{% extends 'dashboard/base.html' %}
+
+
+{% load static %}
+
+{% block body %}
+<div class="col-lg-2 col-md-0" style="color: red">
+</div> <br><br>
+<div class="col-lg-10 col-md-12 " > <br>
+
+    <div> <br>
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb"> 
+            <li class="breadcrumb-item">
+                <a href="#">CRUD</a>
+            </li>
+            <li class="breadcrumb-item active">  Ajout</li>
+        </ol>
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-table"></i>
+                Ajout CRUD
+            </div>
+            <div class="card-body">
+                <form class="form-horizontal" action="{% url 'create_user' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-label-group">
+                                    <input type="text" class="form-control" name="first_name" placeholder="First Name"
+                                        id="inputFirst" required="">
+                                    <label for="inputFirst">Prénom</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-label-group">
+                                    <input type="text" class="form-control" name="last_name" placeholder="Last Name"
+                                        id="inputLast" required="">
+                                    <label for="inputLast">Nom de famille</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-label-group">
+                                    <input type="text" class="form-control" name="username" placeholder="Username"
+                                        id="inputdescription" required="">
+                                    <label for="inputdescription">Nom d'utilisateur</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-label-group">
+                                    <input class="form-control" type="tel" name="email" placeholder="Email"
+                                        id="inputMobile" required="">
+                                    <label for="inputMobile">Email</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-label-group">
+                                    <input type="text" class="form-control" name="password" placeholder="Password"
+                                        id="inputdescription" required="">
+                                    <label for="inputdescription">Mot de passe</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-label-group">
+                                    <select class="w3-select w3-border" name="userType">
+                                        <option value="{{ choice.2 }}">Choisir le rôle de l'utilisateur</option>
+
+                                        <option value="{{ choice.2 }}"> utilisateur</option>
+                                        <option value="{{ choice.3 }}"> Admin</option>
+                                        <option value="{{ choice.4 }}">consultant</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-warning btn-block" type="submit">Soumettre
+                        &nbsp;&nbsp;&nbsp;<span></span></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript">
+    $("#id_username").attr("placeholder", "Enter Username");
+    $("#id_password").attr("placeholder", "Enter Password");
+</script>
+{% endblock %}

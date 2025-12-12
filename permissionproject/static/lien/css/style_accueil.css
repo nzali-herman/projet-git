@@ -1,0 +1,58 @@
+
+      
+        :root {
+            --bleu: #0d6efd;
+            --jaune: #ffc107;
+            --transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        body {
+            background: #f8f9fa;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .animate-pop {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: var(--transition);
+        }
+
+        .animated {
+            opacity: 1!important;
+            transform: scale(1)!important;
+        }
+
+        .judicial-card {
+            background: white;
+            border: 2px solid var(--bleu);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem;
+            box-shadow: 0 10px 30px rgba(13, 110, 253, 0.1);
+            transition: var(--transition);
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--jaune);
+            border-radius: 50%;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .timeline-item {
+            border-left: 3px solid var(--bleu);
+            padding-left: 2rem;
+            margin-left: 1rem;
+        }
+  

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    {% block title %}{% endblock %}
+    <title>Gestion dossiers judiciaires</title>
+
+    <style>
+        :root {
+            --cameroon-green: #007a5e;
+            --cameroon-red: #ce1126;
+            --cameroon-yellow: #fcd116;
+            --original-brown: rgba(139, 69, 19, 1);
+        }
+    </style>
+
+    {% load static %}
+    <!-- Custom fonts for this template-->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <!-- Font awesome CSS -->
+    <link rel="stylesheet" href="{% static 'assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+
+    <!-- Page level plugin CSS-->
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/master.css' %}">
+    <link href="{% static 'css/sb-admin.css' %}" rel="stylesheet">
+    {% block stylesheet %}{% endblock %}
+</head>
+<style>
+        .img-logo {
+            width: 50px;
+            height: 50px;
+            margin-top: 5px;
+            margin-right: 5px;
+        }
+
+        /* style pour navbar responsive */
+        .list_toggle {
+            display: none;
+            color: white;
+        }
+
+        #navbarText {
+            transition: all 0.5s;
+        }
+        .nav-item {
+            margin-top: 20%;
+        }
+        #navbarText {
+            height: 900px;
+        } 
+
+        /* CONSERVATION DE LA COULEUR MARRON ORIGINALE */
+        .header {
+            background-color: var(--original-brown);
+        }
+
+        /* Intégration discrète des couleurs camerounaises */
+        .btn-primary {
+            background-color: var(--cameroon-green);
+            border-color: var(--cameroon-green);
+        }
+
+        .btn-primary:hover {
+            background-color: #005a46;
+            border-color: #005a46;
+        }
+
+        .text-warning {
+            color: var(--cameroon-yellow) !important;
+        }
+
+        .text-danger {
+            color: var(--cameroon-red) !important;
+        }
+
+        .text-success {
+            color: var(--cameroon-green) !important;
+        }
+
+        /* Ajout d'une étoile discrète */
+        .cameroon-star {
+            color: var(--cameroon-yellow);
+            margin: 0 10px;
+        }
+</style>
+<body id="page-top" style="background-size: cover;">
+
+    <!-- headers - COULEUR MARRON CONSERVÉE -->
+    <nav class="navbar navbar-expand navbar-dark fixed-top header">
+        <a class="navbar-brand mr-1 text-white" href="{% url 'publisher' %}">
+            <img src="{% static 'lien/img/patri.jpg' %}" class="img-logo rounded-circle" alt="">
+            <a class="navbar-brand fs-4 text-white" href="{% url 'publisher' %}"
+              style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">II-Dossiers </a> 
+            <y class="text-white fs-1 fw-bold">Tableau de bord</y>
+        </a>
+    
+        <span class="fas fa-bars fs-1 text-light list_toggle mx-3 fs-2" onclick="toggleMenu()"></span>
+        <div class="collapse navbar-collapse" id="">
+        </div>
+
+        <!-- Navbar Search -->
+        <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0"
+            action="{% url 'usearch' %}">
+            <div class="input-group">
+                <input type="text" class="form-control" name="query" placeholder="Search for..." aria-label="Search"
+                    aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Navbar -->
+        <ul class="navbar-nav ml-auto ml-md-0">
+            <li class="nav-item dropdown no-arrow">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user-circle fa-fw text-white"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                    <a class="dropdown-item">{{ user.username }}</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="" data-toggle="modal" data-target="#logoutModal">Déconnexion</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+   
+    <div class="contrainer-fluid col-md-12 col-lg-12 col-sm-12">
+        <div class="row"> 
+            <div class="col-md-2 col-lg-2 col-sm-2 navbarText" id="navbarText" style="margin-top:5.2%;background-color:white;box-shadow: 2px 2px 5px black;">
+               <br>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'publisher' %}"><span class="fa fa-home text-warning" style="font-size:1.5em;"></span> accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'ulchat' %}" style="color: black;"> <span class="fa fa-comments text-dark" style="font-size:1.5em;"></span> Discussion de groupe</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'request_form' %}" style="color: var(--cameroon-red);"><span class="fa fa-trash text-danger" style="font-size:1.5em;"></span> Demander une suppression</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'feedback_form' %}" style="color: var(--cameroon-green);"><span class="fa fa-comment text-success" style="font-size:1.5em;"></span> Laisser les Commentaires </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about' %}" style="color: var(--cameroon-yellow);"><span class="fa fa-users text-warning" style="font-size:1.5em;"></span> A propos de nous</a>
+                </li>
+            </div>
+            <div class="col-md-9 col-lg-9 col-sm-9">
+                {% block body %}{% endblock %}
+                {% block content %}{% endblock content %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: var(--original-brown); color: white;">
+                    <h5 class="modal-title" id="exampleModalLabel">Prêt à partir ?</h5>
+                    <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Sélectionnez « Déconnexion » ci-dessous si vous êtes prêt à mettre fin à votre session actuelle.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Retour</button>
+                    <a class="btn btn-primary" href="/logout">Déconnexion</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+    <!-- Page level plugin JavaScript-->
+    <script src="{% static 'vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.js' %}"></script>
+
+    <!-- Demo scripts for this page-->
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="{% static 'js/sb-admin.min.js' %}"></script>
+    <script>
+        $(".alert-success").fadeTo(2000, 500).slideUp(500, function () {
+            $(".alert-success").slideUp(500);
+        });
+        $(".alert-error").fadeTo(2000, 500).slideUp(500, function () {
+            $(".alert-error").slideUp(500);
+        });
+    </script>
+
+    <style>
+        @media (max-width: 768px) {
+            .navbarText {
+                display: none;
+            }
+            .fa-bars {
+                display: block;
+            }
+        }
+    
+        @media (min-width: 769px) {
+            .navbarText {
+                display: block;
+                width: 30%;
+            }
+            .fa-bars {
+                display: none;
+            }
+        }
+    </style>
+  
+    <script>
+        $(document).ready(function() {
+            if ($(window).width() <= 768) {
+                $('.fa-bars').click(function() {
+                    $('.navbarText').css('position', 'fixed'); 
+                    $('.navbarText').css('z-index', '1000'); 
+                    $('.navbarText').slideToggle();
+                });
+            }
+        });
+    </script>
+
+    {% block javascript %}{% endblock %}
+</body>
+</html>

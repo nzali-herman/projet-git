@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion dossiers judiciaires</title>
+  <link rel="stylesheet" href="{% static 'lien/css/bootstrap.css' %}">
+  <link rel="stylesheet" href="{% static 'lien/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'lien/css/style_service.css' %}">
+  <link rel="stylesheet" href="{% static 'lien/css/fontawesome.css' %}">
+  <link rel="stylesheet" href="{% static 'lien/css/ dataTables.bootstrap4.min.css' %}">
+
+
+</head>
+
+<style>
+  .image-de-fond-acueil{
+    background-image: url('/static/lien/img/mas.avif') ;
+
+   background-attachment: fixed;
+ background-size: cover;
+   
+  }
+   .nav-gauche, .nav-droite, .images_header{
+    background-color: rgba(139, 69, 19,0.9);
+   
+    z-index: 1000px;
+   }
+   .header , .footer {
+    background-color: rgba(139, 69, 19,1);
+
+   }
+   
+   .barre1{
+    background-color: rgb(41, 19, 4);
+   }
+   .barre2{
+    background-color: black;
+    border-bottom-right-radius: 60px;
+    border-bottom-left-radius: 60px;
+    z-index: 0;
+   }
+   .barre2-justice{
+    background-color: green;
+    border-bottom-right-radius: 80px;
+    border-bottom-left-radius: 80px;
+
+   }
+   .barre3{
+    margin-top: -40px;
+    z-index: 1000;
+    background-color: rgb(26, 25, 25);
+   }
+   .barre3 p{
+    font-size: 1.5em;
+    text-align: center;
+   }
+   .barre4, .barre5{
+    background-color: white;
+   }
+
+   .drapeau, .palais-justice {
+    height: 200px;
+    width: 100%;
+   }
+
+   .img{
+    box-shadow: 90px 2px 80px black;
+    
+   }
+
+   .nav-gauche, .nav-droite{
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+   }
+    
+  .dossiers-avocat{
+    height: 260px;
+   }
+  
+ 
+
+
+    .float-icon {
+        animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes iconFloat {
+
+        0%,
+        100% {
+            transform: translateY(0) rotate(0);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(10deg);
+        }
+    }
+
+    .scroll-progress {
+        height: 4px;
+        background: var(--rouge-accent);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        transition: width 0.3s ease-out;
+    }
+
+
+
+    :root {
+        --justice-blue: #0d6efd;
+        --justice-yellow: #ffc107;
+        --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-jaune {
+        height: 20px;
+        border-radius: 10px;
+        background: #ffe69c;
+    }
+
+
+    .judicial-card {
+        
+        border: 3px solid var(--bleu);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem;
+        box-shadow: 0 10px 30px rgba(13, 110, 253, 0.1);
+        transition: var(--transition);
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--jaune);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .animate-card {
+        opacity: 0;
+        transform: translateY(50px) rotateX(15deg);
+        transition: var(--transition);
+    }
+
+    .animated {
+        opacity: 1 !important;
+        transform: translateY(0) rotateX(0) !important;
+    }
+
+    .progress-jaune .progress-bar {
+        background: var(--jaune);
+    }
+
+    @keyframes icon-bounce {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    /* kkkkkkkkkkkkkkkk */
+
+    /* Process Timeline */
+    .timeline-track {
+        position: relative;
+        height: 4px;
+        background: var(--justice-yellow);
+        margin: 4rem 0;
+    }
+    .barre-footer {
+      background:rgba(139, 69, 19,0.9) ;
+    }
+    dd, dt{
+      font-size:o.9em;
+    }
+
+    .timeline-step {
+        position: absolute;
+        top: -25px;
+        width: 50px;
+        height: 50px;
+        background:rgba(139, 69, 19,0.9) ;
+        
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+.rounded-circle{
+width: 90px;
+height: 90px;
+margin-top: -50px;
+}
+button:hover{
+  background-color:green;
+  transition: 0.3s ease-in-out;
+  width: 100px;
+}
+
+ /* style pour navbar responsive */
+ .list_toggle {
+display: none;
+color: white;
+}
+
+@media(max-width:600px) {
+ .collapse {
+     position: absolute;
+     top: 100%;
+     left: 0;
+     right: 0;
+     flex-direction: column;
+     
+     text-align: center;
+     gap: 0;
+     overflow: hidden;
+     background:rgba(139, 69, 19,0.9) ;
+ }
+ 
+ .nav-item{
+     margin-top: 20px;
+     
+     
+ }
+
+ .list_toggle {
+     display: block;
+ }
+}
+
+#navbarNav {
+ transition: all 0.5s;
+}
+.img-logo{
+  width: 50px;
+  height: 50px;
+  margin-top: 5px;
+}
+
+</style>
+
+
+<body class="image-de-fond-acueil   col-lg-12 col-md-12 col-sm-12 col-xl-12 col-xxl-12  ">
+  <div ></div>
+  
+  <header class="header container-fluid navbar-expand position-fixed  py-1">
+   <!-- Navbar -->
+  <nav class="navbar  navbar-expand fixed-top header">
+    <div class="container">
+      <img src="{% static 'lien/img/patri.jpg' %}" class="img-logo  rounded-circle" alt="">
+      <a class="navbar-brand fs-4" href="#"
+        style="font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">II-Dossiers</a>
+      
+
+      <span class="fas fa-bars  list_toggle  fs-2" onclick="toggleMenu()"></span>
+
+
+      <div class="collapse navbar-collapse  " id="navbarNav">
+        <ul class="navbar-nav ms-lg-auto  flex-md-row flex-column text-center ">
+
+          <li class="nav-item"><a class="nav-link" href="{% url 'homeac' %}">Accueil</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">À Propos</a></li>
+
+          <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+          {% if user.is_authenticated %}
+
+          <li class="nav-item"><a class="nav-link p-1  bout-log bg-warning border-0 rounded ms-lg-3 "
+              href="/logout">Se deconnecter</a></li> 
+
+          {% else %}
+
+
+          <li class="nav-item"><a class="nav-link p-1 mt-1 bout-log border-0 rounded bg-success   text-light"
+              href="{% url 'regform' %}">S'inscrire</a></li>
+          <li class="nav-item"><a class=" bg-success nav-link p-1 mt-1 bout-log bg-warning border-0 rounded ms-lg-3 "
+              href="{% url 'home' %}">Se connecter</a></li>
+
+          {% endif %}
+          <!-- <a href="/register"> <button  class="text-light lien_navbar border-0 rounded bg-primary  text-light"></button></a>
+         <a href="/login"><button  class="text-dark lien_navbar bg-warning border-0 rounded"></button> </a>  -->
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+  </header>
+  
+ 
+
+
+  {% block body %}
+  {% endblock %}
+
+
+<footer class=" footer col-lg-12  col-sm-12 ">
+  
+    <center><marquee behavior="" direction="">Gestion des dossiers du Cameroun sur Intégratiom Intéligente des Dossiers (II-Dossiers) </marquee></center>
+ 
+</footer>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script src="{% static 'lien/js/jquery.js' %}"></script>
+  <script src="{% static 'lien/js/bootstrap.js' %}"></script>
+  <script src="{% static 'lien/js/service.js' %}"></script>
+  <script src="{% static 'lien/js/fontawesome.js' %}"></script>
+  <script src="{% static 'lien/js/dataTables.bootstrap4.min.js' %}"></script>
+  <script src="{% static 'lien/js/service.js' %}"></script>
+
+
+<!-- script page d'accueil -->
+<script>
+  $(document).ready(function () {
+    // Gestion de la barre de progression
+    $(window).scroll(function () {
+      const scroll = $(document).scrollTop();
+      const height = $(document).height() - $(window).height();
+      const progress = (scroll / height) * 100;
+      $('.scroll-progress').css('width', progress + '%');
+
+      // Animation des éléments
+      $('.animate-card').each(function () {
+        const elementTop = $(this).offset().top;
+        const elementBottom = elementTop + $(this).outerHeight();
+        const viewportTop = $(window).scrollTop();
+        const viewportBottom = viewportTop + $(window).height();
+        const delay = $(this).data('delay') || 0;
+
+        if (elementBottom > viewportTop && elementTop < viewportBottom) {
+          setTimeout(() => {
+            $(this).addClass('animated');
+          }, delay);
+        }
+      });
+    });
+
+    // Animation au survol
+    $('.judicial-card').hover(
+      function () {
+        $(this).css('transform', 'translateY(-10px)');
+      },
+      function () {
+        $(this).css('transform', 'translateY(0)');
+      }
+    );
+
+    // Effet parallaxe
+    $(window).scroll(function () {
+      const scrolled = $(window).scrollTop();
+      $('.float-icon').css('transform', `translateY(${scrolled * 0.1}px)`);
+    });
+  });
+</script>
+
+<!-- script qui rend la nav bar responsive -->
+<script>
+  let navbar = document.getElementById("navbarNav")
+  navbar.style.maxHeight = "0px";
+
+  function toggleMenu() {
+    if (navbar.style.maxHeight == "0px") {
+      navbar.style.maxHeight = "300px"; localStorage
+    }
+    else {
+      navbar.style.maxHeight = "0px";
+    }
+  }
+</script>
+
+
+ <!-- animate form register -->
+ <script>
+  $('.login2').hide()
+  $('.login2').show(1000)
+</script>
+
+<!-- animate form login -->
+<script>
+  $('.login1').hide()
+  $('.login1').show(1000)
+
+</script>
+
+</body>
+</html>

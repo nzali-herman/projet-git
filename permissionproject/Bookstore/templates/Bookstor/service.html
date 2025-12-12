@@ -1,0 +1,370 @@
+{% extends 'Bookstor/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    :root {
+        --bleu: #0d6efd;
+        --jaune: #ffc107;
+        --transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    body {
+        background: #f8f9fa;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+    }
+
+    .animate-pop {
+        opacity: 0;
+        transform: scale(0.8);
+        transition: var(--transition);
+    }
+
+    .animated {
+        opacity: 1 !important;
+        transform: scale(1) !important;
+    }
+
+    .judicial-card {
+        background: white;
+        border: 2px solid var(--bleu);
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 1rem;
+        box-shadow: 0 10px 30px rgba(13, 110, 253, 0.1);
+        transition: var(--transition);
+    }
+
+    .chart-container {
+        height: 300px;
+        position: relative;
+    }
+
+    .user-avatar {
+        width: 60px;
+        height: 60px;
+        border: 2px solid var(--jaune);
+        border-radius: 50%;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+        }
+
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    .timeline-item {
+        border-left: 3px solid var(--bleu);
+        padding-left: 2rem;
+        margin-left: 1rem;
+
+    }
+</style>
+<style>
+    :root {
+        --bleu-judiciaire: #0d6efd;
+        --rouge-accent: #dc3545;
+        --transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    body {
+        background: #f8f9fa;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+    }
+
+    .animate-element {
+        opacity: 0;
+        transform: translateY(50px) rotateX(15deg);
+        transition: var(--transition);
+    }
+
+    .animated {
+        opacity: 1 !important;
+        transform: translateY(0) rotateX(0) !important;
+    }
+
+    .judicial-card {
+        background: white;
+        border: 2px solid var(--bleu-judiciaire);
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 1rem;
+        box-shadow: 0 10px 30px rgba(13, 110, 253, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-badge {
+        position: absolute;
+        right: -30px;
+        top: 10px;
+        transform: rotate(45deg);
+        background: var(--rouge-accent);
+        color: white;
+        padding: 5px 40px;
+        font-size: 0.8rem;
+    }
+
+    @keyframes iconPop {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        80% {
+            transform: scale(1.2);
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .chart-container {
+        height: 300px;
+        position: relative;
+    }
+</style>
+<br><br>
+<section class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-lg-5 col-col-md-5 col-xl-5 col-xxl-5 col-sm-5 container-fluid">
+            <img src="{% static 'lien/img/ing1.jpg' %}" class="w-100" alt="">
+        </div>
+        <div class="col-lg-6 col-col-md-6 col-xl-6 col-xxl-6 col-sm-6  container-fluid">
+            <p><br><br><br><br><br>
+                Bienvenue dans notre service de gestion des dossiers judiciaires. Nous
+                comprenons que chaque affaire est unique et mérite une attention particulière. C’est pourquoi
+                nous nous engageons à vous offrir un accompagnement personnalisé et transparent tout au long de la
+                procédure.
+
+                Notre équipe d'experts mettra tout en œuvre pour gérer votre dossier avec professionnalisme et
+                confidentialité, en veillant à ce que vous soyez informé et impliqué à chaque étape. Vous pouvez compter
+                sur nous pour une gestion efficace, une communication claire, et un soutien constant. Nous nous
+                efforçons de vous apporter des solutions adaptées à vos besoins, avec l'objectif d'obtenir les meilleurs
+                résultats possibles pour vous.
+            </p>
+
+        </div>
+
+    </div>
+</section>
+<!-- Key Features Section -->
+<div class="container py-5">
+    <h2 class="text-center mb-4 mt-5">Nos services</h2>
+
+
+
+</div>
+<!-- section card -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 container-fluid">
+            <div class="card ">
+                <center> <span class="fa fa-folder-open fs-1  my-5 text-success"></span> </center>
+                <div class="card-body border border-3 border-warning">
+                    <h5 class="card-title ">Collaboration Simplifiée avec les Avocats</h5>
+                    <p class="card-text ">
+                        Facilitez une communication fluide avec vos avocats en 
+                        partageant instantanément des documents, des
+                        notes et des mises à jour en temps réel, pour un suivi optimisé et une gestion efficace de votre dossier.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 container-fluid ">
+            <div class="card ">
+
+                <center> <span class="fa fa-database fs-1  my-5 text-success"></span>
+                </center>
+                <div class="card-body border border-3 border-warning">
+                    <h5 class="card-title ">Gestion Optimisée des Dossiers</h5>
+                    <p class="card-text ">
+                        Organisez et suivez vos dossiers de manière simple et efficace,
+                         en utilisant des filtres et des catégories clairement définis pour 
+                         un accès rapide à l'information dont vous avez besoin.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 container-fluid">
+            <div class="card ">
+                <center> <span class="fa fa-users fs-1  my-5 text-success"></span></center>
+                <div class="card-body border border-3 border-warning">
+                    <h5 class="card-title ">Suivi Simplifié des Clients</h5>
+                    <p class="card-text">
+                        Centralisez et sécurisez les informations de vos clients en ligne,
+                         pour un suivi personnalisé et une gestion optimale de chaque dossier.</p><br><br>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Barre de progression -->
+<div class="scroll-progress"
+    style="height: 4px; background: var(--rouge-accent); width: 0%; position: fixed; top: 0; z-index: 9999;"></div>
+
+<!-- Section Principale -->
+<main class="container py-5">
+    <!-- Section Statistiques Clés -->
+    <section class="mb-5">
+        <h2 class="text-center mb-5 display-4 fw-bold animate-element"><i class="fas fa-chart-pie me-3"></i>Analytiques
+            Judiciaires</h2>
+
+        <div class="row g-4  container-fluid ">
+            <!-- Carte 1: Utilisateurs Actifs -->
+            <div class=" container-fluid   col-md-6 col-lg-3">
+                <div class="judicial-card animate-element">
+                    <span class="stat-badge">Nouveau</span>
+                    <div class="icon-wrapper text-center mb-3">
+                        <i class="fas fa-users fa-3x text-primary"></i>
+                    </div>
+                    <h4>Utilisateurs Actifs</h4>
+                    <div class="chart-container">
+                        <canvas id="usersChart"></canvas>
+                    </div>
+                    <ul class="list-unstyled mt-3">
+                        <li><i class="fas fa-circle text-primary me-2"></i>Avocats: 65%</li>
+                        <li><i class="fas fa-circle text-success me-2"></i>Juristes: 25%</li>
+                        <li><i class="fas fa-circle text-warning me-2"></i>Administration: 10%</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Carte 2: Satisfaction Client -->
+            <div class=" container-fluid col-md-6 col-lg-3">
+                <div class="judicial-card animate-element">
+                    <div class="icon-wrapper text-center mb-3">
+                        <i class="fas fa-smile-beam fa-3x text-success"></i>
+                    </div>
+                    <h4>Satisfaction Client</h4>
+                    <div class="display-2 fw-bold text-center">94%</div>
+                    <div class="progress mt-3" style="height: 20px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 94%"></div>
+                    </div>
+                    <small class="text-muted d-block mt-2">+12% vs 2023</small>
+                </div>
+                <p class="mt-5">Une amélioration de +12% par rapport à 2023.
+                    Nous nous engageons à offrir un service de qualité, en 
+                    écoutant attentivement les besoins de nos clients et en 
+                    apportant des solutions adaptées à chaque situation.
+                     Grâce à votre confiance, nous continuons à améliorer 
+                     constamment notre service pour garantir votre satisfaction totale.</p>
+            </div>
+
+            <!-- Ajouter 18 cartes supplémentaires avec différents graphiques et statistiques -->
+        </div>
+    </section>
+
+    <!-- Section Activités Récentes -->
+    <section class="mb-5  alert-light"><br>
+       
+        <h3 class="mb-4 animate-element"><i class="fas fa-list-alt me-2"></i>Activités Récentes</h3>
+        <div class="row g-4">
+            <div class="col-md-6 animate-element">
+                <div class="judicial-card">
+                    <h5><i class="fas fa-file-contract text-primary me-2"></i>Nouveaux Dossiers</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Affaire #24567
+                            <span class="badge bg-primary">En cours</span>
+                        </li>
+                        <!-- Ajouter 9 éléments supplémentaires -->
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6 animate-element">
+                <p class="mt-5">Description :
+                    Nous poursuivons le traitement de votre dossier. Notre équipe travaille 
+                    activement pour résoudre les enjeux juridiques de manière optimale, en veillant
+                     à ce que chaque aspect soit pris en charge avec soin et précision.
+                    
+                    </p>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+<!-- Section Compteurs -->
+<section class="section  container text-center mt-5">
+    <div class="container">
+        <h2>Nos Statistiques</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="counter alert-primary fw-bold" data-count="1500">0</h3>
+                <p>Dossiers traités</p><br>
+                <p>Nous avons géré avec succès plus de 1 500 
+                    dossiers, en offrant à chaque client une prise en charge
+                     professionnelle et personnalisée. Grâce à 
+                     notre expertise, nous assurons une gestion efficace et fiable de chaque affaire.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h3 class="counter alert-primary fw-bold" data-count="300">0</h3>
+                <p>Avocats inscrits</p>
+                <br>
+                <p>Nous comptons plus de 300 avocats inscrits, spécialisés dans divers
+                     domaines du droit, prêts à vous accompagner dans la gestion
+                      de vos affaires juridiques avec expertise et professionnalisme.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h3 class="counter alert-primary fw-bold" data-count="50">0</h3>
+                <p>Tribunaux partenaires</p>
+                <br>
+                <p>Nous collaborons avec plus de 50 
+                    tribunaux partenaires, garantissant une 
+                    gestion fluide et rapide de vos dossiers dans
+                     les différentes juridictions. Notre réseau de partenariats 
+                     solides nous permet d’offrir des solutions juridiques efficaces et bien coordonnées.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+<!-- Section FAQ -->
+<section class="section bg-lightblue  mt-5 "><br><br>
+    <div class="container">
+        <center>
+            <p class="text-dark">Notre professionalisme est l'essence de notre succès .Nous nous engageons à fournir des
+                services de hautes qualités , personnalisés et adaptés à vos besion. Nous sommes passionnés
+                par notre travail et nous nous enguageons à vous fournir les meilleurs résultats possibles.
+            </p>
+        </center>
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse-accueil"
+                        data-bs-target="#faq1">
+                        Comment s'inscrire ?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse-accueil show">
+                    <div class="accordion-body">
+                        L'inscription se fait en ligne en quelques minutes. Remplissez le formulaire et commencez dès
+                        aujourd'hui ! <a href="/register" class="btn bg-warning btn-lg">Poursuivre</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

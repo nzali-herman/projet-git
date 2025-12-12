@@ -1,0 +1,64 @@
+{% extends 'publisher/base.html' %}
+{% load static %}
+
+
+{% block body %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-1" style="color: red">
+    </div>
+    <div class="col-sm-3" style="color: red">
+      <p style="color: blue"></p>
+    </div>
+
+
+
+    <div class="col-sm-6" style="padding-top: 170px">
+      <div class="card">     
+        <div class="card-header text-primary">
+          Vous voulez en savoir plus sur nous ?
+        </div>
+      </div>
+
+
+      <div class="card mb-4">
+        <div class="card-body">
+
+          <div class="row ">
+            <div class="col-sm-4"></div>
+            <div class="form-group">
+              <p class="mx-2">C'est II-Dossiers, un système de gestion des dossiers judiciaires  en ligne basé sur le web et développé
+                 avec Django, fondé par Noel Moses Mwadende, fondateur et PDG de la chaîne YouTube 
+                 MotechApp et de motechapp.com. L'objectif principal de <strong> II-Dossiers</strong> est de connecter les
+                  personnes qui possèdent une un <strong> Cabinet </strong> , afin de partager différents dossiers provenant de divers pays à travers
+                   le monde. À cette fin, les utilisateurs peuvent télécharger les dossiers qu'ils souhaitent partager, mais 
+                ils peuvent également accéder aux dossiers partagés par eux même.</p>
+            </div>
+
+            <div class="col-sm-4"></div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <div class="col-sm-3" style="color: red">
+  </div>
+
+</div>
+</div>
+
+<script type="text/javascript" src="{% static 'js/jquery-2.1.3.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2" style="color: red">
+        </div>
+        
+        <div class="col-lg-10 mb-3">
+            <div class="col-12 mb-3">
+                <div id="content-wrapper">
+                    <div class="container-fluid"> <br>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="">Utilisateur : {{ object.username }} </a>
+                        </ol>
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <i class="fas fa-table text-warning"></i>
+                                Détails de l'utilisateur
+                            </div>
+                            <div class="card-body">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <ul class="list-group">
+                                            <li class="list-group-item"><strong> Nom d'utilisateur:</strong> {{ object.username }}
+                                            </li>
+                                            <li class="list-group-item"><strong>Prénom :</strong> {{ object.first_name }}</li>
+                                            <li class="list-group-item"><strong>Nom de famille :</strong> {{ object.last_name }}</li>
+                                            <li class="list-group-item"><strong>Email :</strong> {{ object.email }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="row top-buffer" style="padding-top: 10px">
+                                    <div class="col-12">
+                                        <a href="{% url 'aluser' %}"><button type="button"
+                                                class="btn btn-success">Retour</button></a>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endblock %}

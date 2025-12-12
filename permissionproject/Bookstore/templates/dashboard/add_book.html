@@ -1,0 +1,189 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block body %}
+
+<style>
+    .cameroon-theme {
+        --green: #007a5e;
+        --red: #ce1126;
+        --yellow: #fcd116;
+        --star: #ffffff;
+    }
+    
+    .cameroon-header {
+        background: linear-gradient(to right, var(--green) 33%, var(--red) 33% 66%, var(--yellow) 66%);
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .cameroon-header::after {
+        content: "★";
+        color: var(--star);
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+    }
+    
+    .cameroon-btn {
+        background: var(--green);
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .cameroon-btn:hover {
+        background: var(--red);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .cameroon-card {
+        border: 2px solid var(--green);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .cameroon-input {
+        border: 1px solid var(--green);
+    }
+    
+    .cameroon-input:focus {
+        border-color: var(--yellow);
+        box-shadow: 0 0 0 0.2rem rgba(252, 209, 22, 0.25);
+    }
+    
+    .file-upload {
+        border: 2px dashed var(--yellow);
+        background: rgba(252, 209, 22, 0.05);
+    }
+    
+    .section-title {
+        color: var(--green);
+        border-left: 4px solid var(--red);
+        padding-left: 10px;
+    }
+    
+    .required-field::after {
+        content: " *";
+        color: var(--red);
+    }
+</style>
+<div class="col-lg-1"></div>
+    <div class="col-lg-1"></div>
+<div class="col-sm-12 col-lg-7 container-fluid col-sm-5 col-xs-5 cameroon-theme">
+    <div id="content" class="p-6 p-md-5 pt-5">
+        
+        <div class="col-md-12 col-sm-12 col-xs-10">
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="card mb-3 container-fluid cameroon-card">
+                    <div class="card-header cameroon-header py-3">
+                      <br>
+                    </div>
+                    <i class="fas fa-table text-dark "></i>
+                    <span class="text-dark">Remplir les informations du dossier judiciaire</span>
+                    
+                    <div class="card-body">
+                        <form action="{% url 'aabook' %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <!-- Section Informations Personnelles -->
+                            <h5 class="section-title mb-4 mt-2">Informations Personnelles</h5>
+                            
+                            <div class="form-group mb-4">
+                                <div class="col">
+                                    <label class="required-field">Nom complet</label>
+                                    <input type="text" class="form-control cameroon-input" name="title" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mb-4">
+                                <div class="col">
+                                    <label class="required-field">Contact</label>
+                                    <input type="text" class="form-control cameroon-input" name="author" 
+                                        placeholder="Téléphone ou email" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Section Détails de l'Affaire -->
+                            <h5 class="section-title mb-4 mt-4">Détails de l'Affaire</h5>
+                            
+                            <div class="form-group mb-4">
+                                <div class="col">
+                                    <label class="required-field">Type d'affaire</label>
+                                    <select class="form-control cameroon-input" name="publisher" required>
+                                        <option value="">Sélectionnez...</option>
+                                        <option>Divorce</option>
+                                        <option>Litige</option>
+                                        <option>Viol</option>
+                                        <option>Titre foncier</option>
+                                        <option>Contrat</option>
+                                        <option>Autre</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mb-4">
+                                <div class="col">
+                                    <label>Nom de l'adversaire (si applicable)</label>
+                                    <input type="text" class="form-control cameroon-input" name="year">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mb-4">
+                                <div class="col">
+                                    <label class="required-field">Description détaillée</label>
+                                    <textarea class="form-control cameroon-input" name="desc" rows="4" required></textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- Section Documents -->
+                            <h5 class="section-title mb-4 mt-4">Documents à Joindre</h5>
+                            
+                            <div class="form-group mb-4">
+                                <div class="col file-upload p-3 rounded">
+                                    <label class="required-field d-block mb-2">Preuve sous forme d'image</label>
+                                    <small class="d-block mb-3 text-muted">Format acceptés: JPG, PNG (Max 5MB)</small>
+                                    <input type="file" id="myFile" name="cover" class="form-control-file" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mb-4">
+                                <div class="col file-upload p-3 rounded">
+                                    <label>Document légal supplémentaire</label>
+                                    <small class="d-block mb-3 text-muted">PDF, DOC, DOCX (Max 10MB)</small>
+                                    <input type="file" id="myFile" name="pdf1" class="form-control-file" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mb-4">
+                                <div class="col file-upload p-3 rounded">
+                                    <label>Document légal supplémentaire</label>
+                                    <small class="d-block mb-3 text-muted">PDF, DOC, DOCX (Max 10MB)</small>
+                                    <input type="file" id="myFile" name="pdf2" class="form-control-file" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mt-5 text-center">
+                                <button type="submit" class="btn cameroon-btn btn-lg px-5 py-2">
+                                    <i class="fas fa-paper-plane mr-2"></i> Soumettre le dossier
+                                </button>
+                            </div>
+                            
+                            <div class="text-center mt-3">
+                                <small class="text-muted">En soumettant ce formulaire, vous acceptez les conditions d'utilisation</small>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

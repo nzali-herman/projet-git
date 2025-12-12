@@ -1,0 +1,330 @@
+{% extends 'Bookstor/base.html' %}
+{% load static %}
+
+{% block body %}
+<br> <br><br> <br> <br> 
+<div class=" container col-lg-12 col-sm-12 col-xl-12 mt-5">
+    <div class="row mx-3 ">
+        <div class="col-lg-2 col-sm-2 col-md-2 col-xl-2 col-xxl-2 nav-gauche ">
+            <br>
+           <center><p class="text-light">Français | Anglais</p> </center>
+            <br>
+        </div>
+        <div class="   col-lg-8 col-sm-8 col-md-8 col-xl-8 col-xxl-8">
+
+        </div>
+        <div class="col-lg-2 col-sm-2 col-md-2 col-xl-2 col-xxl-2 nav-droite ">
+            <br> <center>
+            <span class="fab fs-2 text-light fa-facebook-square"></span>
+            <span class="fab fs-2 text-light mx-3 fa-twitter-square"></span>
+            <span class="fab fs-2 text-light fa-google-plus"></span>
+        </center>
+            <br> 
+        </div>
+    </div>
+</div>
+
+<div class="container col-lg-12 col-sm-12 col-xl-12">
+
+    <div class="row mx-3   images_header ">
+        <div class="col-lg-3 col-sm-3 col-md-3 col-xl-3 col-xxl-3   ">
+            <div class="d-flex">
+                <div><img src="{% static 'lien/img/patri.webp' %}" class="w-100  mx-2 mt-5  img" alt=""></div>
+                <div class=" mx-3 text-light mt-5 ">RÉPUBLIQUE DU CAMEROUN MINISTÈRE DE LA JUSTICE
+
+                </div>
+            </div>
+
+        </div>
+        <div class="   col-lg-6 col-sm-6 col-md-6 col-xl-6 col-xxl-6    ">
+            <img src="{% static 'lien/img/drapeau.jpg' %} " class=" drapeau  img " alt="">
+
+        </div>
+        <div class="col-lg-3 col-sm-3 col-md-3 col-xl-3 col-xxl-3   ">
+            <img src="{% static 'lien/img/justice.jpg' %}" class=" palais-justice img " alt="">
+        </div>
+
+
+    </div>
+
+
+    <div class="row  barre1   ">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xl-2 col-xxl-2 text-dark bg-light  container my-2 fs-4 ">
+            <center>  Intégration </center>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xl-2 col-xxl-2 text-light  container my-2 fs-4 ">
+            <center> Intelligente</center>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xl-2 col-xxl-2 text-light  container my-2 fs-4 ">
+            <center> des Dossiers </center>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xl-2 col-xxl-2 text-light  container my-2 fs-4 ">
+            <center> judiciaires </center>
+        </div>
+    </div>
+    <div class="row  barre2  ">
+        <center>
+            <p>justice</p>
+        </center>
+    </div>
+    <div class="row mx-3    barre3  ">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xl-2 col-xxl-2 text-success mt-1  container my-1 ">
+            <center> Nouveautées </center>
+            <y class="text-light "> <span class="fa fa-phone text-light"></span> +237650337815 </y>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-7 col-xl-7 col-xxl-7 text-light  container my-1  ">
+            <center>
+                <p class="text-warning">Application de gestion des dossiers judiciaires du  Cameroun (II-DOSSIERS) </p>
+            </center>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xl-22col-xxl-2 text-warning mt-1  container  my-1 ">
+            <center>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+            </center>
+        </div>
+    </div>
+    <!-- section dossiers -->
+    <div class="row  mx-3  barre4 "> <br><br><br>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6 col-xxl-6 text-dark  container  fs-4 mt-5 ">
+            <center>
+                <p class="my-5">
+
+                <h2>Informations sur l'application</h2>
+                <p class="w-100 mx-0">Cette application a été lancée en 2025, avec pour objectif de simplifier la
+                    gestion des dossiers
+                    judiciaires tout en garantissant un haut niveau de sécurité. </p>
+                <p>Elle a été développée en réponse aux besoins croissants du secteur judiciaire en matière de
+                    digitalisation et d'automatisation des processus administratifs. Grâce à un système de notifications
+                    en
+                    temps réel et des fonctionnalités de recherche avancée, cette application vise à améliorer
+                    l'efficacité
+                    des professionnels du droit.</p>
+                <p><strong>Date de lancement :</strong> Janvier 2025</p>
+                <p><strong>Version actuelle :</strong> 1.0.0</p>
+                </p>
+            </center>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xl-6 col-xxl-6 text-light mt-5  container my-5 fs-4 ">
+            <center> <img src="{% static 'lien/img/dossiers_avocat.png' %}" style="width: 80%;" class=" w h-75 my-5 dossiers-avocat "
+                    alt="">
+            </center>
+            <br><br>
+
+            <center><img src="{% static 'lien/img/imgpartenaires.jpg' %}" class="   dossiers-avocat " alt=""
+                    style="width: 70%;"></center>
+
+
+        </div>
+
+
+
+    </div>
+
+    <div class="row  alert-secondary   ">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xl-2 col-xxl-2 text-dark bg-wartext-warning  container my-2 fs-4 ">
+            <center> Intégration  </center>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xl-2 col-xxl-2 text-success  container my-2 fs-4 ">
+            <center>Intelligente </center>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xl-2 col-xxl-2 text-success  container my-2 fs-4 ">
+            <center> des Dossiers </center>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xl-2 col-xxl-2 text-success  container my-2 fs-4 ">
+            <center> judiciaires </center>
+        </div>
+    </div>
+    <div class="row  barre2-justice  ">
+        <center>
+            <p>justice</p>
+        </center>
+    </div>
+    <div class="row mx-3    barre3  ">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xl-2 col-xxl-2 text-success mt-1  container my-1 ">
+            <center> Nouveautées </center>
+            <y class="text-light "> <span class="fa fa-phone text-light"></span> +237650337815 </y>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-7 col-xl-7 col-xxl-7 text-light  container my-1  ">
+            <center>
+                <p class="text-warning">Nos services </p>
+            </center>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xl-2  col-xxl-2 text-warning mt-1  container  my-1 ">
+            <center>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+                <span class="fa fa-star"></span>
+            </center>
+        </div>
+    </div>
+
+    <div class="row  barre5  mx-3  ">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xl-4 col-xxl-4 text-dark   container my-2 fs-4 ">
+            <div class="alert-secondary ">
+                <img src="{% static 'lien/img/just.png' %}" class=" w-100   dossiers-avocat " alt="">
+                <center>
+                    <p class="">Rapport des droits de L'Homme</p>
+                </center>
+            </div>
+            <br>
+            <div class="judicial-card animate-card text-warning" data-delay="400">
+
+                <h3><i class="fas fa-chart-line me-2"></i>Statistiques en Direct</h3>
+                <div class="row mt-4">
+                    <div class="col-6">
+                        <div class="display-4 fw-bold">1.5K</div>
+                        <small>Dossiers actifs</small>
+                    </div>
+                    <div class="col-6">
+                        <div class="display-4 fw-bold text-success fs-1 ">99.9%</div>
+                        <small>Disponibilité</small>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+            <div class="alert-secondary">
+                <img src="{% static 'lien/img/balance.jfif' %}" class=" w-100   dossiers-avocat " alt="">
+                <center>
+                    <p>Annuaires statistiques</p>
+                </center>
+            </div>
+        </div>
+        <div class="col-lg-5 col-md-5 col-sm-5 col-xl-5 col-xxl-5 text-light  container my-2 fs-4 ">
+            <div class="alert-secondary  ">
+                <img src="{% static 'lien/img/ing1.jpg' %}" class=" w-100   dossiers-avocat " alt="">
+                <center>
+                    <h2 class="my-1">Gestion es ligne</h2>
+
+                    <p class="card-text mx-2 my-2  " style="font-size: 0.7em;"> Nous gérons les informations des clients
+                        en ligne
+                        de manière centralisée et
+                        sécurisée pour un suivi
+                        optimal.</p> <button class="text-light border-0 "
+                        style="font-size: 0.8em; border-radius: 12px;background-color: rgba(139, 69, 19,0.9); ">Découvrir
+                    </button> <br> <br>
+                </center>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xl-3 col-xxl-2   text-light container  fs-4 ">
+            <!-- Process Timeline -->
+            <section class=" ">
+                <div class="container">
+                    <div class="timeline-track">
+                        <div class="timeline-step" style="left: 10%">
+                            <i class="fas fa-file-import"></i>
+                        </div>
+                        <div class="timeline-step" style="left: 40%">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="timeline-step" style="left: 70%">
+                            <i class="fas fa-archive"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="judicial-card animate-card nav-droite ">
+                    <div class="icon-wrapper text-white ">
+                        <i class="fas fa-file-contract fa-3x float-icon"></i>
+                    </div>
+                    <h4 class="text-success"></h4> Gestion des Dossiers</h4>
+                    <ul class="list-unstyled">
+                        <li class="text-light"><i class="fas fa-check-circle text-success me-2"></i>Suivi en temps réel
+                        </li>
+                        <li class="text-light"><i class="fas fa-check-circle text-danger me-2"></i>Archivage sécurisé
+                        </li>
+                        <li class="text-light"><i class="fas fa-check-circle text-warning me-2"></i>Recherche
+                            intelligente</li>
+                    </ul>
+                </div>
+
+            </section>
+            <br>
+            <center>
+                <P class="text-dark"> Ce que disent nos utilisateurs </P>
+            </center>
+            <br>
+            <div class="card border border-2 border-success text-dark">
+                <center><img src="{% static 'lien/img/satisfait0.jpg' %}" class="  rounded-circle   dossiers-avocat "
+                        alt=""></center>
+                <div class="card-body">
+                    <p style="font-size: 0.8em;">"Cette application a transformé notre manière de travailler. Elle est
+                        simple, efficace et
+                        très
+                        intuitive."</p>
+                    <footer class="blockquote-footer">Marc Dupont, Avocat</footer>
+                </div>
+            </div>
+
+            <br>
+            <div class="card border border-2 border-success text-dark ">
+                <center><img src="{% static 'lien/img/satisfait3.jpg' %}" class="  rounded-circle   dossiers-avocat "
+                        alt=""></center>
+                <div class="card-body">
+                    <p class="" style="font-size: 0.8em;">"Un excellent outil pour gérer des dizaines de dossiers à la
+                        fois. Je gagne un temps
+                        précieux!"
+                    </p>
+                    <footer class="blockquote-footer">Sophie Leclerc, Client</footer>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row   barre-footer  mx-3  ">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xl-3 col-xxl-3 text-light  container my-2 fs-4 ">
+            Infos Pratiques
+            <br> <br>
+            <div class=" ms-3 ">
+
+                <span class="fa fa-phone-square"> </span>
+                <dd>(+237) 650337815 <br /> (+237) 696087345</dd>
+                <span class="fa fa-envelope"> </span>
+                <dd>justice@ii.doessiers.cm</dd>
+
+
+                <span class="fa fa-map-marker"> </span>
+                <dd>BP <br> 1000 Bafoussam - Cameroun</dd>
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xl-3 col-xxl-3 text-light  container my-2 fs-4 ">
+            Réseaux sociaux
+            <br> <br>
+            <div class="ms-3">
+
+
+
+                <span class="fab fa-facebook-square"></span> facebook <br>
+
+                <span class="fab fa-twitter-square"></span> twitter <br>
+
+                <span class="fab fa-google-plus"></span> google
+
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xl-3 col-xxl-3 text-light   my-2 fs-4 ">
+            Avertissements
+
+            <br> <br>
+            <span class="fa fa-exclamation-triangle  "></span> L'utilisation frauduleuse de cette application est
+            strictement interdite et peut entraîner des poursuites judiciaires.
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<br> <br> <br><br><br><br>
+{% endblock %}

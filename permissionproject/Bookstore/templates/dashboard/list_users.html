@@ -1,0 +1,235 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block body %}
+
+<style>
+    :root {
+        --cameroon-green: #007a5e;
+        --cameroon-red: #ce1126;
+        --cameroon-yellow: #fcd116;
+        --cameroon-star: #ffffff;
+    }
+    
+    .card-header-cameroon {
+        background: linear-gradient(to right, var(--cameroon-green) 33%, var(--cameroon-red) 33% 66%, var(--cameroon-yellow) 66%);
+        color: white;
+        position: relative;
+    }
+    
+    .card-header-cameroon::after {
+        content: "★";
+        color: var(--cameroon-star);
+        position: absolute;
+        right: 520px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2rem;
+    }
+    
+    .btn-add-user {
+        background-color: var(--cameroon-green);
+        color: white;
+        border: none;
+    }
+    
+    .btn-view {
+        background-color: var(--cameroon-green);
+        color: white;
+        border: none;
+    }
+    
+    .btn-edit {
+        background-color: var(--cameroon-yellow);
+        color: black;
+        border: none;
+    }
+    
+    .btn-delete {
+        background-color: var(--cameroon-red);
+        color: white;
+        border: none;
+    }
+    
+    .btn-view:hover, .btn-edit:hover, .btn-delete:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .pagination .active a {
+        background-color: var(--cameroon-green) !important;
+        border-color: var(--cameroon-green) !important;
+    }
+    
+    .pagination li a {
+        color: var(--cameroon-green);
+    }
+    
+    .breadcrumb {
+        background-color: rgba(0, 122, 94, 0.1);
+    }
+    
+    .table th {
+        background-color: rgba(0, 122, 94, 0.1);
+        color: var(--cameroon-green);
+    }
+    
+    .role-admin {
+        color: var(--cameroon-green);
+        font-weight: bold;
+    }
+    
+    .role-consultant {
+        color: var(--cameroon-yellow);
+        font-weight: bold;
+    }
+    
+    .role-user {
+        color: var(--cameroon-red);
+    }
+</style>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    
+    <div class="col-sm-10 mb-3">
+      <div class="col-12 mb-3">
+        <div id="content-wrapper">
+          <div class="container-fluid">
+            <br>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="">Membres du personnel</a>
+              </li>
+              <li class="breadcrumb-item active">Liste des utilisateurs</li>
+            </ol>
+            
+            <div class="card mb-3">
+              <div class="card-header card-header-cameroon">
+                <i class="fas fa-table text-white"></i>
+                Liste des utilisateurs
+                <a class="btn btn-sm btn-add-user" href="{% url 'create_user_form' %}"
+                  style="padding: 8px; float: right;">
+                  <i class="fas fa-plus"></i> Ajouter un utilisateur
+                </a>
+              </div>
+              
+              <div class="card-body">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                  {{ message }}
+                </div>
+                {% endfor %}
+                
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover" id="dataTable" style="width: 100%;" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>N°</th>
+                        <th>Nom d'utilisateur</th>
+                        <th>Rôle</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if users %}
+                      {% for user in users %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>
+                          {% if user.is_consultant == True %}
+                            <span class="role-consultant">Consultant</span>
+                          {% elif user.is_admin == True %}
+                            <span class="role-admin">Administrateur</span>
+                          {% else %}
+                            <span class="role-user">Utilisateur</span>
+                          {% endif %}
+                        </td>
+                        <td>{{ user.email }}</td>
+                        <td class="text-nowrap">
+                          <a href="{% url 'alvuser' user.pk %}" class="btn btn-view btn-sm">
+                            <i class="fas fa-eye"></i> Voir
+                          </a>
+                          <a href="{% url 'aeuser' user.pk %}" class="btn btn-edit btn-sm">
+                            <i class="fas fa-edit"></i> Modifier
+                          </a>
+                          <a href="{% url 'aduser' user.pk %}" class="btn btn-delete btn-sm">
+                            <i class="fas fa-trash"></i> Supprimer
+                          </a>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                      {% endif %}
+                    </tbody>
+                  </table>
+                  
+                  {% if is_paginated %}
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                      {% if page_obj.has_previous %}
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                        </a>
+                      </li>
+                      {% else %}
+                      <li class="page-item disabled">
+                        <span class="page-link">&laquo;</span>
+                      </li>
+                      {% endif %}
+                      
+                      {% for i in paginator.page_range %}
+                      {% if page_obj.number == i %}
+                      <li class="page-item active">
+                        <span class="page-link">{{ i }}</span>
+                      </li>
+                      {% else %}
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                      </li>
+                      {% endif %}
+                      {% endfor %}
+                      
+                      {% if page_obj.has_next %}
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                      {% else %}
+                      <li class="page-item disabled">
+                        <span class="page-link">&raquo;</span>
+                      </li>
+                      {% endif %}
+                    </ul>
+                  </nav>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extrascripts %}
+<script type="text/javascript">
+  $(function () {
+    // Hide message
+    $(".alert").fadeTo(2000, 500).slideUp(500, function () {
+      $(".alert").slideUp(500);
+    });
+    
+    // Initialize DataTable
+    $('#dataTable').DataTable();
+  });
+</script>
+{% endblock extrascripts %}

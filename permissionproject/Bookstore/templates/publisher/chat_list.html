@@ -1,0 +1,139 @@
+{% extends 'publisher/base.html' %}
+
+{% block title %}
+
+{% endblock title %}
+
+{% block content %}
+<style>
+    
+    :root {
+        --cameroon-green: #007a5e;
+        --cameroon-red: #ce1126;
+        --cameroon-yellow: #fcd116;
+        --cameroon-star: #ffffff;
+    }
+    
+    .card-header-cameroon {
+        background: linear-gradient(to right, var(--cameroon-green) 33%, var(--cameroon-red) 33% 66%, var(--cameroon-yellow) 66%);
+        color: white;
+        position: relative;
+        padding: 15px 20px;
+    }
+    
+    .card-header-cameroon::after {
+        content: "★";
+        color: var(--cameroon-star);
+        position: absolute;
+        right: 290px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2rem;
+    }
+ </style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-1" style="color: red">
+        </div>
+        <div class="col-sm-2" style="color: red">
+            <p style="color: blue"></p>
+        </div>
+
+        <div class="col-sm-8" style="padding-top: 28px">
+            <div class="card">
+            </div>
+
+            <br><br>
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card-header card-header-cameroon">
+                            
+                        
+                                <br>
+                            </div> <br>
+                            <center>
+                                <!-- Bouton Actualiser en dégradé camerounais -->
+                                <a href="/ulchat"><button class="btn" ><i class="fa fa-refresh"
+                                            aria-hidden="true"></i>
+                                        Actualiser pour nouveau message</button></a><br><br><br>
+                            </center>
+
+                            {% for chat in object_list %}
+
+                            <div class="" style="width: 100%; background: white;">
+                                {% if chat.user.is_superuser or chat.user.is_admin %}
+                               
+                                <small class="chat-date">{{ chat.posted_at }}</small> <br>
+                                <!-- Message admin en vert camerounais -->
+                                <div class="rounded container w-50 mx-0"
+                                    style="box-shadow: 2px 0px 2px 2px #007a5e; background-color: rgba(0, 122, 94, 0.1);">
+                                    <small class="chat-user-special" style="color: #007a5e;">
+                                        <span class="fa fa-user-circle" style="font-size: 1.3em; color: #007a5e;"></span>  
+                                        {{ chat.user }}- Administrateur
+                                    </small>
+                                    <b class="chat-content" style="font-size: 0.7em;">{{ chat|linebreaks }}</b>
+                                </div>
+
+                                {% elif chat.user.is_consultant %}
+                               
+                                <small class="chat-date">{{ chat.posted_at }}</small> <br>
+                                <!-- Message consultant en rouge camerounais -->
+                                <div class="w-50 mx-0 rounded container"
+                                    style="box-shadow: 2px 0px 2px 2px #ce1126; background-color: rgba(206, 17, 38, 0.1); color: #333;">
+                                    <small class="chat-user-special" style="color: #ce1126;">
+                                        <span class="fa fa-user-circle" style="font-size: 1.3em; color: #ce1126;"></span>  
+                                        {{ chat.user }}- consultant
+                                    </small>
+                                    <b class="chat-content" style="font-size: 0.7em;">{{ chat|linebreaks }}</b>
+                                </div>
+                                
+                                {% else %}
+                                {% if chat.user == request.user %}
+                                <a href="{% url 'uechat' chat.pk %}"> 
+                                    <span class="fa fa-edit" style="font-size: 1.5em; float: right; color: #fcd116;"></span>
+                                </a>
+                                <a href="{% url 'udchat' chat.pk %}"> 
+                                    <span class="fa fa-trash mx-1" style="font-size: 1.5em; float:right; color: #ce1126;"></span>
+                                </a>
+                                {% endif %}
+                                <small class="chat-date" style="float: right;">{{ chat.posted_at }}</small> <br>
+                                <!-- Message utilisateur en jaune camerounais -->
+                                <div class="w-75 container rounded mx-0"
+                                    style="box-shadow: 2px 0px 2px 2px #fcd116; background-color: rgba(252, 209, 22, 0.1); color: #333; float: right;">
+                                    <small class="chat-user" style="color: #007a5e;">
+                                        <span class="fa fa-user-circle" style="font-size: 1.3em; color: #fcd116;"></span>  
+                                        {{ chat.user }} - utilisateur
+                                    </small>
+                                    <b class="chat-content" style="font-size: 0.7em;">{{ chat|linebreaks }}</b>
+                                </div>
+                                
+                                {% endif %}
+                                <!-- Bouton Nouveau Message en vert camerounais -->
+                                <a href="{% url 'ucchat' %}"><button class="btn my-3" style="background-color: #007a5e; color: white; border: none;">Nouveau
+                                    Message</button></a>
+
+                                <br><br><br>
+
+                                {% empty %}
+                                <h1 class="heading" style="color: #007a5e;">No Chats Yet Be The First To Message!</h1><br>
+
+                                {% endfor %}
+                                <br>
+
+                                <div class="col-sm-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-2" style="color: red">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
