@@ -1,0 +1,221 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block body %}
+<style>
+    :root {
+        --justice-blue: #1a365d;
+        --justice-blue-dark: #122846;
+        --justice-yellow: #c5a059;
+        --justice-yellow-light: #d4b87e;
+        --bg-light: #f8fafc;
+        --border-color: #e2e8f0;
+    }
+
+    /* Fil d'Ariane Prestige */
+    .breadcrumb {
+        background: white;
+        border-left: 5px solid var(--justice-yellow);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .breadcrumb-item a {
+        color: var(--justice-blue);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    /* Carte de formulaire */
+    .card-prestige {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(26, 54, 93, 0.1);
+        overflow: hidden;
+    }
+
+    .card-prestige .card-header {
+        background: var(--justice-blue);
+        color: white;
+        padding: 1.25rem 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        border: none;
+    }
+
+    .card-prestige .card-header i {
+        color: var(--justice-yellow);
+        margin-right: 12px;
+    }
+
+    /* Champs de saisie */
+    .form-label-group label {
+        color: var(--justice-blue);
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control, .w3-select {
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        padding: 12px 15px;
+        transition: all 0.3s ease;
+        height: auto;
+    }
+
+    .form-control:focus, .w3-select:focus {
+        border-color: var(--justice-yellow);
+        box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.1);
+        outline: none;
+    }
+
+    /* Sélecteur de rôle spécifique */
+    .w3-select {
+        width: 100%;
+        background-color: white;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%231a365d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+    }
+
+    /* Bouton d'action */
+    .btn-justice {
+        background: linear-gradient(135deg, var(--justice-blue) 0%, var(--justice-blue-dark) 100%);
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    .btn-justice:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(26, 54, 93, 0.3);
+        color: var(--justice-yellow-light);
+    }
+
+    .alert-prestige {
+        border: none;
+        border-left: 4px solid var(--justice-yellow);
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+</style>
+
+<div class="container-fluid px-4 py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Administration</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Ajouter un Utilisateur</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <div class="card card-prestige">
+                <div class="card-header">
+                    <i class="fas fa-user-shield"></i>
+                    Configuration du profil utilisateur
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show alert-prestige" role="alert">
+                            <i class="fas fa-info-circle me-2 text-primary"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+
+                    <form class="form-horizontal" action="{% url 'admin_create_user' %}" method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <div class="form-label-group">
+                                    <label for="inputFirst">Prénom</label>
+                                    <input type="text" class="form-control" name="first_name" placeholder="Ex: Jean" id="inputFirst" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-label-group">
+                                    <label for="inputLast">Nom de famille</label>
+                                    <input type="text" class="form-control" name="last_name" placeholder="Ex: Eto'o" id="inputLast" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <div class="form-label-group">
+                                    <label for="inputUsername">Nom d'utilisateur</label>
+                                    <input type="text" class="form-control" name="username" placeholder="j.etoo237" id="inputUsername" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-label-group">
+                                    <label for="inputEmail">Adresse Email</label>
+                                    <input type="email" class="form-control" name="email" placeholder="contact@domaine.cm" id="inputEmail" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <div class="form-label-group">
+                                    <label for="inputPassword">Mot de passe provisoire</label>
+                                    <input type="password" class="form-control" name="password" placeholder="••••••••" id="inputPassword" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-label-group">
+                                    <label for="userRole">Rôle système</label>
+                                    <select class="w3-select" name="userType" id="userRole">
+                                        <option value="" disabled selected>Attribuer un niveau d'accès</option>
+                                        <option value="{{ choice.2 }}">👤 Client</option>
+                                        <option value="{{ choice.3 }}">🔑 Administrateur</option>
+                                        <option value="{{ choice.4 }}">⚖️ Consultant</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <button class="btn btn-justice btn-block w-100" type="submit">
+                                    <i class="fas fa-check-circle me-2"></i> CRÉER LE COMPTE UTILISATEUR
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    // Optionnel : Ajout d'une petite animation sur les champs au chargement
+    $(document).ready(function() {
+        $(".form-control").on("focus", function() {
+            $(this).prev("label").css("color", "var(--justice-yellow)");
+        }).on("blur", function() {
+            $(this).prev("label").css("color", "var(--justice-blue)");
+        });
+    });
+</script>
+{% endblock %}

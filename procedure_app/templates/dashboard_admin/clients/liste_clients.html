@@ -1,0 +1,220 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block body %}
+
+<style>
+    :root {
+        /* Couleurs Justice : Bleu et Jaune */
+        --justice-blue: #1a365d;
+        --justice-yellow: #c5a059;
+        --justice-white: #ffffff;
+    }
+    
+    .card-header {
+        background-color: var(--justice-blue) !important;
+        color: var(--justice-white) !important;
+        border-bottom: 3px solid var(--justice-yellow);
+    }
+    
+    .btn-add-user {
+        background-color: var(--justice-yellow);
+        color: white;
+        border: none;
+    }
+    
+    .btn-view {
+        background-color: var(--justice-blue);
+        color: white;
+        border: none;
+    }
+    
+    .btn-edit {
+        background-color: var(--justice-yellow);
+        color: white;
+        border: none;
+    }
+    
+    .btn-delete {
+        background-color: #ce1126; /* On garde le rouge pour la suppression par sécurité */
+        color: white;
+        border: none;
+    }
+    
+    .btn-view:hover, .btn-edit:hover, .btn-delete:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+    
+    .pagination .active .page-link {
+        background-color: var(--justice-blue) !important;
+        border-color: var(--justice-blue) !important;
+        color: white !important;
+    }
+    
+    .pagination .page-link {
+        color: var(--justice-blue);
+    }
+    
+    .breadcrumb {
+        background-color: rgba(26, 54, 93, 0.1);
+    }
+    
+    .table th {
+        background-color: rgba(26, 54, 93, 0.05);
+        color: var(--justice-blue);
+    }
+    
+    .role-admin {
+        color: var(--justice-blue);
+        font-weight: bold;
+    }
+    
+    .role-consultant {
+        color: var(--justice-yellow);
+        font-weight: bold;
+    }
+    
+    .role-user {
+        color: #6c757d;
+    }
+</style>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12 mb-3">
+        <br>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+            <a href="" style="color: var(--justice-blue);">Membres du personnel</a>
+            </li>
+            <li class="breadcrumb-item active">Liste des utilisateurs</li>
+        </ol>
+        
+        <div class="card mb-3">
+            <div class="card-header">
+            <i class="fas fa-table text-white"></i>
+            Liste des utilisateurs
+            <a class="btn btn-sm btn-add-user" href="{% url 'create_user_form' %}"
+                style="padding: 8px; float: right;">
+                <i class="fas fa-plus"></i> Ajouter un utilisateur
+            </a>
+            </div>
+            
+            <div class="card-body">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
+            
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="dataTable" style="width: 100%;" cellspacing="0">
+                <thead>
+                    <tr>
+                    <th>N°</th>
+                    <th>Nom d'utilisateur</th>
+                    <th>Rôle</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if clients %}
+                    {% for client in clients %}
+                    <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ client.username }}</td>
+                    <td>
+                        {% if client.est_consultant == True  %}
+                        <span class="role-consultant">Consultant</span>
+                        {% elif client.est_administrateur == True or client.is_superuser == True  %}
+                        <span class="role-admin">Administrateur</span>
+                        {% else %}
+                        <span class="role-user">Client</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ client.email }}</td>
+                    <td class="text-nowrap">
+                        <a href="{% url 'admin_view_detail_user' client.pk %}" class="btn btn-view btn-sm">
+                        <i class="fas fa-eye"></i> Voir
+                        </a>
+                        <a href="{% url 'admin_edit_user' client.pk %}" class="btn btn-edit btn-sm">
+                        <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <a href="{% url 'admin_delete_user' client.pk %}" class="btn btn-delete btn-sm">
+                        <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+                </table>
+                
+                {% if is_paginated %}
+                <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                    </li>
+                    {% endif %}
+                    
+                    {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                    <li class="page-item active">
+                    <span class="page-link">{{ i }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                    <span class="page-link">&raquo;</span>
+                    </li>
+                    {% endif %}
+                </ul>
+                </nav>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extrascripts %}
+<script type="text/javascript">
+  $(function () {
+    $(".alert").fadeTo(2000, 500).slideUp(500);
+    
+    // Initialisation DataTable sans la pagination JS pour laisser Django travailler
+    $('#dataTable').DataTable({
+        "paging": false,
+        "info": false,
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/French.json"
+        }
+    });
+  });
+</script>
+{% endblock extrascripts %}

@@ -1,0 +1,90 @@
+{% extends 'base_dashboard.html' %}
+
+{% block body %}
+<style>
+    :root {
+        --justice-blue: #1a365d;
+        --justice-yellow: #c5a059;
+        --justice-white: #ffffff;
+    }
+
+    .card-header {
+        background-color: var(--justice-blue) !important;
+        color: var(--justice-white) !important;
+        border-bottom: 3px solid var(--justice-yellow);
+    }
+
+    .breadcrumb {
+        background-color: rgba(26, 54, 93, 0.1);
+    }
+
+    .breadcrumb-item a {
+        color: var(--justice-blue) !important;
+        font-weight: bold;
+    }
+
+    .btn-justice-cancel {
+        background-color: var(--justice-yellow);
+        color: white;
+        border: none;
+    }
+
+    .btn-justice-cancel:hover {
+        background-color: #b08d4a;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #ce1126;
+        border: none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2">
+        </div>
+        <div class="col-lg-12 mb-3">
+            <div class="col-12 mb-3">
+                <div id="content-wrapper">
+                    <div class="container-fluid"> <br>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="">Utilisateur : {{ object.username }} </a>
+                            </li>
+                        </ol>
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <i class="fas fa-exclamation-triangle text-warning"></i>
+                                Confirmation de suppression
+                            </div>
+                            <div class="card-body">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                                    {{ message }}
+                                </div>
+                                {% endfor %}
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <div class="alert alert-warning" role="alert">
+                                                <i class="fas fa-info-circle"></i> Êtes-vous sûr de vouloir supprimer les détails de <strong>{{ object }}</strong> ? Cette action est irréversible.
+                                            </div>
+                                            <div class="mt-4">
+                                                <input type="submit" class="btn btn-danger px-4" value="Oui, supprimez-le" />
+                                                <a class="btn btn-justice-cancel px-4" href="{% url 'admin_view_liste_clients' %}">Non, annuler</a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

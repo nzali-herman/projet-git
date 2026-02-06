@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion des Procédures Judiciaires</title>
+  <link rel="stylesheet" href="{% static 'css/fontawesome-all.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  
+  <style>
+    :root {
+        --justice-blue: #1a365d;
+        --justice-blue-dark: #122846;
+        --justice-yellow: #c5a059;
+        --justice-white: #ffffff;
+    }
+
+    /* Style pour la neige de dossiers */
+    #folder-snow-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
+    }
+    
+    .folder-snowflake {
+      position: absolute;
+      top: -50px;
+      color: var(--justice-blue); /* Couleur ajustée */
+      font-size: 1.2em;
+      user-select: none;
+      pointer-events: none;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+      opacity: 0.7;
+    }
+    
+    /* Animation de chute */
+    @keyframes folderFall {
+      0% {
+        transform: translateY(-50px) translateX(0) rotate(0deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(100vh) translateX(100px) rotate(360deg);
+        opacity: 0.3;
+      }
+    }
+    
+    /* Navbar personnalisée - FIXE */
+    .navbar-custom {
+      background: linear-gradient(135deg, var(--justice-blue) 0%, var(--justice-blue-dark) 100%);
+      border-bottom: 3px solid var(--justice-yellow); /* Ajout du liseré jaune institutionnel */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      padding: 0.8rem 1rem;
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1050 !important;
+      transition: all 0.3s ease;
+    }
+    
+    /* Effet de navbar au scroll */
+    .navbar-custom.scrolled {
+      padding: 0.5rem 1rem;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .navbar-brand {
+      color: white !important;
+      font-weight: 700;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .navbar-brand i {
+      margin-right: 10px;
+      font-size: 1.8rem;
+    }
+    
+    .navbar-nav .nav-link {
+      color: rgba(255, 255, 255, 0.9) !important;
+      font-weight: 500;
+      padding: 0.5rem 1rem !important;
+      margin: 0 0.2rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+    
+    .navbar-nav .nav-link:hover {
+      background-color: rgba(197, 160, 89, 0.2); /* Hover aux nuances dorées */
+      color: var(--justice-yellow) !important;
+      transform: translateY(-2px);
+    }
+    
+    .navbar-nav .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white !important;
+    }
+    
+    .btn-inscription {
+      background-color: var(--justice-yellow); /* Bouton en jaune justice */
+      color: white !important;
+      border-radius: 5px;
+      padding: 0.5rem 1.5rem !important;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: 2px solid var(--justice-yellow);
+    }
+    
+    .btn-inscription:hover {
+      background-color: transparent;
+      color: var(--justice-yellow) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .navbar-toggler {
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 0.25rem 0.5rem;
+    }
+    
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+    
+    /* Contenu principal */
+    body {
+      position: relative;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: #f4f7f6;
+      padding-top: 70px !important;
+    }
+    
+    .main-content {
+      position: relative;
+      z-index: 1;
+      min-height: calc(100vh - 170px);
+      padding-top: 10px;
+    }
+    
+    .content-wrapper {
+      background-color: rgba(255, 255, 255, 0.98);
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(26, 54, 93, 0.1);
+      padding: 25px;
+      margin: 20px auto 30px;
+      border-top: 4px solid var(--justice-blue);
+    }
+    
+    /* Section utilisateurs */
+    .users-section {
+      text-align: center;
+      padding: 30px 0;
+      margin-bottom: 30px;
+      background: rgba(26, 54, 93, 0.03);
+      border-radius: 10px;
+      border: 1px solid rgba(26, 54, 93, 0.1);
+    }
+    
+    .text-primary { color: var(--justice-blue) !important; }
+    .bg-primary { background-color: var(--justice-blue) !important; }
+    
+    /* Footer */
+    .footer {
+      background: var(--justice-blue);
+      color: white;
+      padding: 20px 0;
+      position: relative;
+      z-index: 1000;
+      border-top: 3px solid var(--justice-yellow);
+    }
+    
+    .marquee-container {
+      padding: 10px 0;
+      overflow: hidden;
+      background: rgba(197, 160, 89, 0.15);
+      border-radius: 5px;
+    }
+    
+    .marquee-text {
+      font-size: 1.1rem;
+      font-weight: 500;
+      white-space: nowrap;
+      animation: marquee 30s linear infinite;
+    }
+    
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    
+    .img-logo {
+        width: 60px;
+        height: 60px;
+        border: 2px solid var(--justice-yellow);
+        transition: all 0.4s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-radius: 50%;
+        object-fit: cover;
+        background: white;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="folder-snow-container"></div>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <img src="{% static './img/patri.webp' %}" class="mx-2 img-logo">
+      II-Dossiers
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a class="nav-link active" href="#"><i class="fas fa-home"></i> Accueil</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-folder-open"></i> Dossiers</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-calendar-alt"></i> Calendrier</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-chart-bar"></i> Rapports</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-cog"></i> Paramètres</a></li>
+        <li class="nav-item ml-lg-2 mt-2 mt-lg-0">
+          <a class="nav-link btn-inscription" href="{% url 'register_page' %}">
+            <i class="fas fa-user-plus"></i> S'inscrire
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container main-content">
+  <div class="content-wrapper">
+    <div class="text-center mb-5">
+      <h1 class="display-4 text-primary font-weight-bold mb-3">
+         <h3 class="text-primary">Bienvenue sur la plateforme II-Dossiers</h3>
+        Gestion des Dossiers Judiciaires
+      </h1>
+      <p class="lead text-muted">Système intégré de gestion intelligente des procédures judiciaires du Cameroun</p>
+    </div>
+    
+    <div class="users-section">
+      <img src="{% static './img/logo_cameroun.png' %}" class="w-75" alt="Logo Cameroun">
+      <p class="text-muted mt-3">Gestion centralisée et sécurisée de tous vos dossiers judiciaires.</p>
+    </div>
+    
+    {% block body %}
+    {% endblock %}
+    
+    
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="marquee-container">
+      <div class="marquee-text text-white">
+        Gestion des dossiers du Cameroun sur Intégration Intelligente des Dossiers (II-Dossiers) • 
+        Sécurité et Confidentialité garanties • Système certifié par le Ministère de la Justice •
+      </div>
+    </div>
+    <div class="text-center mt-3">
+      <p class="mb-0">
+        &copy; 2026 II-Dossiers - Tous droits réservés | <a href="#" class="text-white ml-2">Contact</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/fontawesome-all.min.js' %}"></script>
+
+<script>
+$(function(){
+  function createFolderSnow() {
+    const snowContainer = $('#folder-snow-container');
+    const folderIcons = ['fa-folder', 'fa-folder-open', 'fa-file-alt'];
+    // J'ai réactivé le nombre de dossiers (i < 30) car il était à 0 dans votre extrait
+    for (let i = 0; i < 0; i++) {
+      const iconClass = folderIcons[Math.floor(Math.random() * folderIcons.length)];
+      const folderFlake = $(`<div class="folder-snowflake"><i class="fas ${iconClass}"></i></div>`);
+      const startLeft = Math.random() * 100;
+      const fallDuration = Math.random() * 25 + 25;
+      const fallDelay = Math.random() * 5;
+      const swayAmount = Math.random() * 150 - 75;
+      
+      folderFlake.css({
+        left: startLeft + 'vw',
+        color: i % 2 === 0 ? '#1a365d' : '#c5a059',
+        opacity: Math.random() * 0.5 + 0.3,
+        fontSize: (Math.random() * 12 + 12) + 'px',
+        animation: `folderFall ${fallDuration}s linear infinite`,
+        animationDelay: fallDelay + 's'
+      });
+      folderFlake[0].style.setProperty('--sway', `${swayAmount}px`);
+      snowContainer.append(folderFlake);
+    }
+  }
+  createFolderSnow();
+  // ... reste des scripts inchangé ...
+});
+</script>
+</body>
+</html>

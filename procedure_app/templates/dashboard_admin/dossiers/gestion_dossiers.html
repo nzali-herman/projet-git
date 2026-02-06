@@ -1,0 +1,271 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block body %}
+
+<style>
+    :root {
+        /* Couleurs Justice : Bleu et Jaune */
+        --justice-blue: #1a365d;
+        --justice-yellow: #c5a059;
+        --justice-white: #ffffff;
+    }
+    
+    .card-header {
+        background-color: var(--justice-blue) !important;
+        color: var(--justice-white) !important;
+        border-bottom: 3px solid var(--justice-yellow);
+        padding: 15px 20px;
+    }
+    
+    .btn-add-custom {
+        background-color: var(--justice-yellow);
+        color: white;
+        border: none;
+    }
+    
+    .btn-view {
+        background-color: var(--justice-blue);
+        color: white;
+        border: none;
+    }
+    
+    .btn-edit {
+        background-color: var(--justice-yellow);
+        color: white;
+        border: none;
+    }
+    
+    .btn-delete {
+        background-color: #ce1126;
+        color: white;
+        border: none;
+    }
+    
+    .btn-view:hover, .btn-edit:hover, .btn-delete:hover, .btn-add-custom:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        color: white;
+    }
+    
+    .pagination .active .page-link {
+        background-color: var(--justice-blue) !important;
+        border-color: var(--justice-blue) !important;
+        color: white !important;
+    }
+    
+    .pagination .page-link {
+        color: var(--justice-blue);
+    }
+    
+    .breadcrumb {
+        background-color: rgba(26, 54, 93, 0.1);
+        padding: 10px 15px;
+    }
+    
+    .table th {
+        background-color: rgba(26, 54, 93, 0.05);
+        color: var(--justice-blue);
+    }
+
+    .img-thumbnail-justice {
+        border: 2px solid var(--justice-yellow);
+        border-radius: 5px;
+    }
+
+    .piece-item {
+        background: #f8f9fa;
+        border-left: 3px solid var(--justice-blue);
+        margin-bottom: 5px;
+        padding: 5px 10px;
+        border-radius: 0 4px 4px 0;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-sm-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#" style="color: var(--justice-blue);">Tableau de bord</a></li>
+                    <li class="breadcrumb-item active">Gestion des dossiers</li>
+                </ol>
+            </nav>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-folder-open me-2"></i> Gestion des dossiers</span>
+                </div>
+                
+                <div class="card-body">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Aperçu</th>
+                                    <th>Détails Dossier</th>
+                                    <th>Pièces Jointes</th>
+                                    <th class="text-center">Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if dossiers %}
+                                    {% for dossier in dossiers %}
+                                        <tr>
+                                            <td><strong>#{{ dossier.id }}</strong></td>
+                                            <td class="text-center">
+                                                {% if dossier.couverture_dossier %}
+                                                    <img src="{{ dossier.couverture_dossier.url }}" alt="Couverture" class="img-thumbnail-justice" style="height:80px; width:80px; object-fit: cover;">
+                                                {% else %}
+                                                    <small class="text-muted italic">Pas d'image</small>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="fw-bold" style="color: var(--justice-blue);">{{ dossier.nom }}</div>
+                                                <div class="small text-muted">{{ dossier.type_affaire }}</div>
+                                                <div class="small mt-1"><i class="fas fa-user-tie"></i> Par: {{ dossier.telecharger_par|default:"Admin" }}</div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex flex-column gap-1">
+                                                {% for piece in dossier.pieces_jointes.all %}
+                                                    <div class="piece-item d-flex align-items-center justify-content-between">
+                                                        <a href="{{ piece.fichier.url }}" target="_blank" class="text-decoration-none {% if piece.depuis_formulaire_ajout_piecejointe_dossier_par_admin %}text-primary fw-bold{% else %}text-dark{% endif %} small">
+                                                            <i class="fa fa-file-alt"></i> {{ piece.fichier.name|slice:"12:"|truncatechars:20 }}
+                                                             <br><small class="text-muted">{{ piece.uploaded_fr }}</small>
+                                                        </a>
+                                                        <div class="ms-2">
+                                                            <a href="{% url 'analyse_ia' piece.id %}" class="btn btn-sm btn-outline-primary me-2" title="Analyser avec l'IA">
+                                                                <i class="fas fa-robot " style="color:#1a365d;"></i>
+                                                            </a>
+                                                            <a href="{{ piece.fichier.url }}" download class="text-success me-2"><i class="fa fa-download"></i></a>
+                                                            <button class="btn btn-link p-0 text-danger" data-bs-toggle="modal" data-bs-target="#deletePiece{{ piece.id }}"><i class="fa fa-trash-alt"></i></button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal fade" id="deletePiece{{ piece.id }}" tabindex="-1">
+                                                        <div class="modal-dialog modal-sm">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body text-center">
+                                                                    <p>Supprimer cette pièce ?</p>
+                                                                    <form method="post" action="{% url 'supprimer_piece_jointe' piece.id %}">
+                                                                        {% csrf_token %}
+                                                                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Non</button>
+                                                                        <button type="submit" class="btn btn-danger btn-sm">Oui, supprimer</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% empty %}
+                                                    <span class="text-muted small">Aucune pièce jointe</span>
+                                                {% endfor %}
+                                                </div>
+
+                                                <form method="post" action="{% url 'ajouter_piece_jointe' dossier.id %}" enctype="multipart/form-data" class="mt-2 d-flex gap-1">
+                                                    {% csrf_token %}
+                                                    <input type="file" name="fichier" class="form-control form-control-sm" required>
+                                                    <button type="submit" class="btn btn-sm btn-add-custom"><i class="fa fa-plus"></i></button>
+                                                </form>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge rounded-pill bg-secondary">{{ dossier.pieces_jointes.count }}</span>
+                                            </td>
+                                            <td class="text-nowrap">
+                                                <button class="btn btn-view btn-sm" data-bs-toggle="modal" data-bs-target="#detailModal{{ dossier.id }}">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <a href="{% url 'admin_edit_dossier' dossier.pk %}" class="btn btn-edit btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button class="btn btn-delete btn-sm" data-bs-toggle="modal" data-bs-target="#deleteDossier{{ dossier.id }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                        <div class="modal fade" id="detailModal{{ dossier.id }}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Dossier: {{ dossier.nom }}</h5>
+                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p><strong>Contact:</strong> {{ dossier.contact }}</p>
+                                                        <p><strong>Adversaire:</strong> {{ dossier.adversaire }}</p>
+                                                        <p><strong>Description:</strong></p>
+                                                        <p class="text-muted">{{ dossier.description_affaire }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal fade" id="deleteDossier{{ dossier.id }}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content text-center py-3">
+                                                    <div class="modal-body">
+                                                        <h5>Supprimer le dossier ?</h5>
+                                                        <p>Cette action est définitive pour <strong>{{ dossier.nom }}</strong>.</p>
+                                                        <form method="post" action="{% url 'supprimer_dossier_client' dossier.pk %}">
+                                                            {% csrf_token %}
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                            <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if is_paginated %}
+                    <nav class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                            {% endif %}
+                            {% for i in paginator.page_range %}
+                                <li class="page-item {% if page_obj.number == i %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        $('#dataTable').DataTable({
+            "paging": false,
+            "info": false,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/French.json"
+            }
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,338 @@
+{% extends 'base_dashboard.html' %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Résumé IA -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 ">
+                <div class="card-header  text-white" style="background-color:#c5a059;">
+                    <h4><i class="fas fa-brain"></i> Analyse IA Avancée</h4>
+                </div>
+                <div class="card-body ">
+                    <div class="document-info mb-4 p-3 bg-light rounded ">
+                        <h5 class="mb-2">{{ piece.nom }}</h5>
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">
+                                <i class="fas fa-hashtag"></i> ID: {{ piece.id }}
+                            </small>
+                            <small class="text-muted">
+                                <i class="fas fa-file-pdf"></i> PDF
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div id="ai-summary" class="ai-summary">
+                        {{ resume|safe|linebreaks }}
+                    </div>
+                    
+                    <div class="mt-4 d-flex gap-2">
+                        <a href="{{ piece.fichier.url }}" class="btn btn-outline-primary" target="_blank">
+                            <i class="fas fa-download"></i> Original
+                        </a>
+                        <button onclick="refreshAnalysis()" class="btn btn-outline-success">
+                            <i class="fas fa-sync-alt"></i> Réanalyser
+                        </button>
+                        <button onclick="showHelp()" class="btn btn-outline-info">
+                            <i class="fas fa-question-circle"></i> Aide
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat IA -->
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 h-65">
+                <div class="card-header  text-white" style="background-color:#1a365d;">
+                    <h4><i class="fas fa-robot"></i> Assistant IA Intelligent</h4>
+                </div>
+                <div class="card-body d-flex flex-column ">
+                    <div id="chat-container" class="chat-container flex-grow-1">
+                        <div class="welcome-message">
+                            <div class="message ai">
+                                <div class="message-header">
+                                    <strong>Assistant IA</strong>
+                                    <small class="text-muted">Juste maintenant</small>
+                                </div>
+                                <div class="message-content ">
+                                    🚀 **Assistant IA activé !**<br>
+                                    J'ai analysé votre document avec intelligence artificielle.<br>
+                                    Posez-moi n'importe quelle question dessus !
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input mt-3">
+                        <div class="input-group">
+                            <input type="text" id="question-input" 
+                                   class="form-control form-control-lg" 
+                                   placeholder="Posez votre question ici..."
+                                   autocomplete="off">
+                            <button class="btn  btn-lg" id="send-btn" style="color:#1a365d;; background-color:#c5a059">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="quick-questions mt-2">
+                            <small class="text-muted d-block mb-1">Questions rapides :</small>
+                            <div class="d-flex flex-wrap gap-1">
+                                <button class="btn btn-sm btn-outline-secondary quick-btn" data-question="De quoi parle ce document ?">
+                                    Sujet ?
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary quick-btn" data-question="Quelles sont les questions ?">
+                                    Questions ?
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary quick-btn" data-question="Explique les concepts clés">
+                                    Concepts ?
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary quick-btn" data-question="Donne des exemples">
+                                    Exemples ?
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Styles -->
+<style>
+.ai-summary {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    line-height: 1.6;
+}
+
+.ai-summary h1, .ai-summary h2, .ai-summary h3 {
+    color: #2c3e50;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.ai-summary ul, .ai-summary ol {
+    padding-left: 25px;
+    margin-bottom: 15px;
+}
+
+.ai-summary li {
+    margin-bottom: 8px;
+}
+
+.chat-container {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    min-height: 300px;
+    max-height: 400px;
+}
+
+.message {
+    margin-bottom: 15px;
+    max-width: 85%;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.message.ai {
+    margin-right: auto;
+}
+
+.message.user {
+    margin-left: auto;
+}
+
+.message-header {
+    font-size: 0.85em;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.message-content {
+    padding: 12px 15px;
+    border-radius: 15px;
+    word-wrap: break-word;
+}
+
+.message.ai .message-content {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-top-left-radius: 5px;
+}
+
+.message.user .message-content {
+    background:#c5a059;
+    color: white;
+    border-top-right-radius: 5px;
+    
+    
+
+.welcome-message {
+    text-align: center;
+    padding: 20px;
+    color: #6c757d;
+}
+
+.quick-questions .btn {
+    font-size: 0.8em;
+    padding: 3px 8px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+</style>
+
+<!-- JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatContainer = document.getElementById('chat-container');
+    const questionInput = document.getElementById('question-input');
+    const sendBtn = document.getElementById('send-btn');
+    const quickBtns = document.querySelectorAll('.quick-btn');
+    
+    // Focus automatique
+    questionInput.focus();
+    
+    // Fonction pour ajouter un message
+    function addMessage(content, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+        
+        const now = new Date();
+        const timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                       now.getMinutes().toString().padStart(2, '0');
+        
+        messageDiv.innerHTML = `
+            <div class="message-header">
+                <strong>${isUser ? 'Vous' : 'Assistant IA'}</strong>
+                <small class="text-muted">${timeStr}</small>
+            </div>
+            <div class="message-content">
+                ${content}
+            </div>
+        `;
+        
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    // Fonction pour envoyer une question
+    async function sendQuestion(question) {
+        if (!question.trim()) return;
+        
+        // Afficher la question
+        addMessage(question, true);
+        
+        // Désactiver le bouton pendant l'envoi
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        
+        try {
+            // Envoyer à l'API
+            const response = await fetch('{% url "chatbot_api" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    question: question,
+                    doc_id: '{{ doc_id }}'
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Afficher la réponse
+                addMessage(data.reponse, false);
+            } else {
+                addMessage('❌ ' + data.reponse, false);
+            }
+            
+        } catch (error) {
+            console.error('Erreur:', error);
+            addMessage('❌ Erreur de connexion au serveur', false);
+        } finally {
+            // Réactiver le bouton
+            sendBtn.disabled = false;
+            sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            
+            // Vider et refocus
+            questionInput.value = '';
+            questionInput.focus();
+        }
+    }
+    
+    // Événements
+    sendBtn.addEventListener('click', () => sendQuestion(questionInput.value));
+    
+    questionInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendQuestion(questionInput.value);
+        }
+    });
+    
+    // Boutons rapides
+    quickBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const question = btn.getAttribute('data-question');
+            questionInput.value = question;
+            sendQuestion(question);
+        });
+    });
+    
+    // Fonction de rafraîchissement
+    window.refreshAnalysis = function() {
+        if (confirm('Voulez-vous réanalyser le document avec IA ?')) {
+            window.location.reload();
+        }
+    };
+    
+    // Fonction d'aide
+    window.showHelp = function() {
+        const helpMessage = `🤖 **COMMANDES DE L'ASSISTANT IA :**
+
+📄 **Pour le document :**
+- "De quoi parle ce document ?" → Analyse du contenu
+- "Quelles sont les questions ?" → Liste des questions
+- "Explique le concept X" → Explications détaillées
+- "Donne des exemples" → Illustrations concrètes
+
+💬 **Questions intelligentes :**
+- "Quel est l'objectif principal ?"
+- "Quels sont les points clés ?"
+- "Comment répondre à la question 1 ?"
+- "Définition de [terme technique]"
+
+🔍 **L'IA comprend le contexte et répond de manière intelligente !**`;
+        
+        addMessage(helpMessage, false);
+    };
+    
+    // Auto-scroll
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+});
+</script>
+{% endblock %}

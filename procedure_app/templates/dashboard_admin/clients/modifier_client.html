@@ -1,0 +1,137 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block body %}
+<style>
+    :root {
+        --justice-blue: #1a365d;
+        --justice-yellow: #c5a059;
+        --justice-white: #ffffff;
+    }
+
+    .card-header {
+        background-color: var(--justice-blue) !important;
+        color: var(--justice-white) !important;
+        border-bottom: 3px solid var(--justice-yellow);
+    }
+
+    .breadcrumb {
+        background-color: rgba(26, 54, 93, 0.1);
+    }
+
+    .breadcrumb-item a {
+        color: var(--justice-blue) !important;
+        font-weight: bold;
+    }
+
+    /* Style du formulaire */
+    .form-container {
+        background-color: var(--justice-white);
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .form-group label {
+        color: var(--justice-blue);
+        font-weight: 600;
+    }
+
+    /* Boutons */
+    .btn-justice-submit {
+        background-color: var(--justice-blue);
+        color: white;
+        border: none;
+    }
+
+    .btn-justice-submit:hover {
+        background-color: #122846;
+        color: white;
+    }
+
+    .btn-justice-back {
+        background-color: var(--justice-yellow);
+        color: white;
+        border: none;
+    }
+
+    .btn-justice-back:hover {
+        background-color: #b08d4a;
+        color: white;
+    }
+
+    /* Mise en forme des champs input par défaut de Django */
+    input[type="text"], input[type="email"], input[type="password"], select, textarea {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2">
+        </div>
+        
+        <div class="col-lg-12 mb-3">
+            <div class="col-12 mb-3">
+                <div id="content-wrapper">
+                    <div class="container-fluid"> <br>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="">User : {{ object.username }} </a>
+                            </li>
+                        </ol>
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <i class="fas fa-edit text-warning"></i>
+                                {% if request.path == '/new' %} Ajouter {% else %} Modifier {% endif %} l'utilisateur
+                            </div>
+                            <div class="card-body">
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <form method="post" class="form-container">
+                                            {% csrf_token %}
+                                            {% for field in form %}
+                                                <div class="form-group">
+                                                    {{ field.label_tag }}
+                                                    {{ field }}
+                                                    {% if field.errors %}
+                                                        <small class="text-danger">{{ field.errors }}</small>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                            
+                                            <div class="mt-4">
+                                                <input type="submit" 
+                                                    {% if request.path == '/new' %} value="Ajouter" {% else %} value="Mettre à jour" {% endif %} 
+                                                    class="btn btn-justice-submit px-4 py-2"/>
+                                                
+                                                <a href="{% url 'admin_view_liste_clients' %}" class="btn btn-justice-back px-4 py-2">
+                                                    Retour
+                                                </a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

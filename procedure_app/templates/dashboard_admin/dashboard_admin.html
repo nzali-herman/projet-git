@@ -1,0 +1,354 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block body %}
+
+<style>
+  :root {
+    /* Couleurs Justice */
+    --justice-blue: #1a365d;
+    --justice-yellow: #c5a059;
+    --justice-white: #ffffff;
+  }
+
+  .dashboard-container {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .dashboard-header {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid var(--justice-blue);
+  }
+
+  .dashboard-title {
+    color: var(--justice-blue);
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  .dashboard-subtitle {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+  }
+
+  /* Cartes de statistiques */
+  .stat-card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 25px;
+    overflow: hidden;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-dossiers {
+    background: linear-gradient(135deg, var(--justice-blue) 0%, #2c5282 100%);
+    border-left: 5px solid var(--justice-yellow);
+  }
+
+  .card-utilisateurs {
+    background: linear-gradient(135deg, var(--justice-yellow) 0%, #a3864a 100%);
+    border-left: 5px solid var(--justice-blue);
+  }
+
+  .card-discussions {
+    background: linear-gradient(135deg, #2c5282 0%, var(--justice-blue) 100%);
+    border-left: 5px solid var(--justice-yellow);
+  }
+
+  .card-commentaires {
+    background: linear-gradient(135deg, #a3864a 0%, var(--justice-yellow) 100%);
+    border-left: 5px solid var(--justice-blue);
+  }
+
+  .stat-icon {
+    font-size: 2.5rem;
+    color: white;
+    opacity: 0.9;
+  }
+
+  .stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: white;
+    margin: 10px 0;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .card-body {
+    padding: 25px;
+  }
+
+  /* Section graphiques */
+  .charts-section {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .section-title {
+    color: var(--justice-blue);
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ecf0f1;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 30px;
+  }
+
+  .chart-box {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #ecf0f1;
+    height: 100%;
+  }
+
+  /* Oscillateurs */
+  .oscillator {
+    height: 60px;
+    margin-top: 15px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%);
+    animation: waveMove 2s linear infinite;
+  }
+
+  @keyframes waveMove {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-container { padding: 10px; }
+    .dashboard-title { font-size: 1.5rem; }
+    .stat-number { font-size: 1.8rem; }
+    .chart-container { height: 250px; }
+  }
+</style>
+
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Tableau de Bord Administrateur</h1>
+    <p class="dashboard-subtitle">Gestion des procédures judiciaires - Vue d'ensemble des données</p>
+  </div>
+
+  <div class="row">
+    <div class="col-xl-3 col-lg-6 col-md-6">
+      <div class="stat-card card-dossiers">
+        <div class="card-body text-center">
+          <i class="fas fa-folder-open stat-icon"></i>
+          <div class="stat-number">{{ dossier }}</div>
+          <div class="stat-label">Dossiers Actifs</div>
+          <div class="oscillator">
+            <div class="wave"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6">
+      <div class="stat-card card-utilisateurs">
+        <div class="card-body text-center">
+          <i class="fas fa-users stat-icon"></i>
+          <div class="stat-number">{{ utilisateur }}</div>
+          <div class="stat-label">Utilisateurs Inscrits</div>
+          <div class="oscillator">
+            <div class="wave"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6">
+      <div class="stat-card card-discussions">
+        <div class="card-body text-center">
+          <i class="fas fa-comments stat-icon"></i>
+          <div class="stat-number">{{ chat }}</div>
+          <div class="stat-label">Messages Échangés</div>
+          <div class="oscillator">
+            <div class="wave"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6">
+      <div class="stat-card card-commentaires">
+        <div class="card-body text-center">
+          <i class="fas fa-star stat-icon"></i>
+          <div class="stat-number">{{ feedback }}</div>
+          <div class="stat-label">Commentaires Reçus</div>
+          <div class="oscillator">
+            <div class="wave"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-section">
+    <h3 class="section-title">📈 Visualisation des Données</h3>
+    <div class="row">
+      <div class="col-xl-6 col-lg-12">
+        <div class="chart-box">
+          <div class="chart-container">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-6 col-lg-12">
+        <div class="chart-box">
+          <div class="chart-container">
+            <canvas id="pieChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-xl-6 col-lg-12">
+        <div class="chart-box">
+          <div class="chart-container">
+            <canvas id="lineChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-6 col-lg-12">
+        <div class="chart-box">
+          <div class="chart-container">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const statsData = [{{ dossier }}, {{ utilisateur }}, {{ chat }}, {{ feedback }}];
+  const labels = ['Dossiers', 'Utilisateurs', 'Messages', 'Commentaires'];
+  const justiceColors = ['#1a365d', '#c5a059', '#2c5282', '#a3864a'];
+  
+  // 1. Bar Chart
+  const barCtx = document.getElementById('barChart').getContext('2d');
+  new Chart(barCtx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Valeurs',
+        data: statsData,
+        backgroundColor: justiceColors,
+        borderRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  // 2. Pie Chart
+  const pieCtx = document.getElementById('pieChart').getContext('2d');
+  new Chart(pieCtx, {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: statsData,
+        backgroundColor: justiceColors,
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '60%'
+    }
+  });
+
+  // 3. Line Chart
+  const lineCtx = document.getElementById('lineChart').getContext('2d');
+  new Chart(lineCtx, {
+    type: 'line',
+    data: {
+      labels: Array.from({length: 12}, (_, i) => 'M' + (i + 1)),
+      datasets: [{
+        label: 'Activité',
+        data: [12, 19, 3, 5, 2, 3, 15, 20, 10, 8, 12, 18],
+        borderColor: '#1a365d',
+        backgroundColor: 'rgba(26, 54, 93, 0.1)',
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+
+  // 4. Radar Chart
+  const radarCtx = document.getElementById('radarChart').getContext('2d');
+  new Chart(radarCtx, {
+    type: 'radar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Répartition',
+        data: statsData,
+        backgroundColor: 'rgba(197, 160, 89, 0.2)',
+        borderColor: '#c5a059',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+});
+</script>
+
+{% endblock %}

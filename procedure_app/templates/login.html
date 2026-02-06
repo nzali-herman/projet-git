@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+<style>
+    :root {
+        --justice-blue: #1a365d;
+        --justice-blue-dark: #122846;
+        --justice-yellow: #c5a059;
+        --justice-yellow-light: #d4b87e;
+        --border-light: #e2e8f0;
+        --shadow-color: rgba(26, 54, 93, 0.15);
+    }
+
+    .login-main-container {
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px; /* Réduit pour mobile */
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Carte de formulaire optimisée */
+    .form-card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 25px; /* Réduit pour mobile */
+        box-shadow: 0 15px 35px var(--shadow-color);
+        border: 1px solid var(--border-light);
+        max-width: 1000px;
+        width: 100%;
+        z-index: 2;
+        backdrop-filter: blur(10px);
+    }
+
+    /* Ajustement responsive */
+    @media (max-width: 768px) {
+        .login-main-container { padding: 15px; }
+        .form-card { padding: 15px; border-radius: 15px; }
+        .welcome-section { margin-top: 20px; padding: 30px !important; }
+        h1 { font-size: 1.5rem !important; }
+    }
+
+    .login-section {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        height: 100%;
+    }
+
+    .welcome-section {
+        background: linear-gradient(135deg, var(--justice-blue) 0%, var(--justice-blue-dark) 100%);
+        border-radius: 15px;
+        padding: 40px;
+        color: white;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    h1 {
+        color: var(--justice-blue);
+        font-weight: 700;
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+    }
+
+    .welcome-section h1 { color: white; }
+
+    /* Inputs plus larges sur mobile */
+    .form-input {
+        width: 100%;
+        padding: 14px;
+        border: 2px solid var(--border-light);
+        border-radius: 10px;
+        margin-bottom: 15px;
+        font-size: 16px; /* Évite le zoom auto sur iPhone */
+    }
+
+    .btn-submit {
+        background: var(--justice-blue);
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 10px;
+        font-weight: 700;
+        width: 100%;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .cameroon-star {
+        color: var(--justice-yellow);
+        font-size: 2rem;
+        margin: 10px 0;
+        animation: rotate 15s linear infinite;
+    }
+
+    /* Bulles de fond */
+    .snowflake {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.3;
+        z-index: 0;
+        pointer-events: none;
+    }
+</style>
+
+<div class="login-main-container">
+    <div id="snowflakes"></div>
+    
+    <div class="form-card">
+        <div class="row g-3">
+            <div class="col-lg-6 order-1">
+                <div class="login-section">
+                    <div class="text-center">
+                        <div class="login-icon" style="color: var(--justice-blue); font-size: 2rem; margin-bottom: 10px;">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h1>Accès Agent</h1>
+                        
+                        {% for message in messages %}
+                        <div class="alert alert-warning py-2 small">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                        
+                        <form action="{% url 'login_view' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="username" placeholder="Identifiant" required class="form-input">
+                            <input type="password" name="password" placeholder="Mot de passe" required class="form-input">
+                            <button type="submit" class="btn-submit">Se connecter</button>
+                        </form>
+                        
+                        <div class="mt-4">
+                            <p class="text-muted small">Sécurité renforcée</p>
+                            <div class="d-flex justify-content-center gap-3" style="color: var(--justice-blue); opacity: 0.7;">
+                                <i class="fab fa-facebook fa-lg"></i>
+                                <i class="fab fa-google fa-lg"></i>
+                                <i class="fab fa-linkedin fa-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 order-lg-2 order-2">
+                <div class="welcome-section text-center">
+                    <h1>Portail <span style="color: var(--justice-yellow)">II-Dossiers</span></h1>
+                    
+                    <div class="cameroon-star">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    
+                    <p class="small px-2">
+                        Cabinet d'Avocats & Conseil juridique. <br>
+                        Veuillez vous identifier pour accéder aux dossiers.
+                    </p>
+                    
+                    <div class="mt-4">
+                        <a href="{% url 'register_page' %}" class="btn btn-outline-light w-100" style="border-radius: 10px; padding: 10px; border-color: var(--justice-yellow); color: var(--justice-yellow);">
+                            Créer un compte
+                        </a>
+                    </div>
+
+                    <div class="mt-3">
+                        <small style="font-size: 0.7rem; opacity: 0.8;">
+                            <i class="fas fa-shield-alt me-1"></i> Connexion sécurisée
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        const container = $('#snowflakes');
+        const colors = ['#1a365d', '#c5a059', '#cbd5e0']; 
+        for (let i = 0; i < 25; i++) {
+            const size = Math.random() * 15 + 5;
+            const flake = $('<div class="snowflake"></div>').css({
+                'width': size + 'px',
+                'height': size + 'px',
+                'background': colors[Math.floor(Math.random() * colors.length)],
+                'left': Math.random() * 100 + '%',
+                'top': Math.random() * 100 + '%',
+                'animation': `fall ${Math.random() * 10 + 10}s linear infinite`
+            });
+            container.append(flake);
+        }
+    });
+</script>
+{% endblock %}

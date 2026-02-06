@@ -1,0 +1,181 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block body %}
+<style>
+    :root {
+        --justice-blue: #1a365d;
+        --justice-blue-dark: #122846;
+        --justice-yellow: #c5a059;
+        --border-light: #e2e8f0;
+        --bg-light: #f8fafc;
+    }
+
+    /* Fil d'Ariane (Breadcrumb) élégant */
+    .breadcrumb {
+        background: white;
+        border-left: 5px solid var(--justice-yellow);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        padding: 15px 25px;
+    }
+
+    .breadcrumb-item a {
+        color: var(--justice-blue);
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 1.1rem;
+    }
+
+    /* Carte de Dossier */
+    .card-justice {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(26, 54, 93, 0.1);
+    }
+
+    .card-justice .card-header {
+        background: var(--justice-blue);
+        color: white;
+        font-weight: 600;
+        padding: 15px 25px;
+        border: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .card-justice .card-header i {
+        margin-right: 10px;
+        color: var(--justice-yellow);
+    }
+
+    /* Style du Formulaire */
+    .form-group label {
+        color: var(--justice-blue);
+        font-weight: 700;
+        margin-bottom: 8px;
+        margin-top: 15px;
+        display: block;
+    }
+
+    /* Ciblage des inputs générés par Django {{ field }} */
+    .form-group input, .form-group select, .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid var(--border-light);
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+
+    .form-group input:focus {
+        border-color: var(--justice-yellow);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
+    }
+
+    /* Boutons */
+    .btn-justice-submit {
+        background: var(--justice-blue);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 700;
+        transition: all 0.3s;
+    }
+
+    .btn-justice-submit:hover {
+        background: var(--justice-blue-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(26, 54, 93, 0.3);
+    }
+
+    .btn-justice-back {
+        background: #edeff2;
+        color: var(--text-medium);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        margin-left: 10px;
+        transition: all 0.3s;
+    }
+
+    .btn-justice-back:hover {
+        background: #e2e8f0;
+        color: var(--justice-blue);
+    }
+
+    .alert-custom {
+        border-radius: 10px;
+        border-left: 5px solid var(--justice-yellow);
+    }
+</style>
+
+<div class="container-fluid px-4">
+    <br>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <i class="fas fa-folder-open me-2 text-muted"></i>
+                <a href="#">Dossier : {{ object.nom }}</a>
+            </li>
+        </ol>
+    </nav>
+
+    <div class="card card-justice mb-4">
+        <div class="card-header">
+            <i class="fas fa-edit"></i>
+            Gestion des détails du dossier
+        </div>
+        <div class="card-body p-4">
+            
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show alert-custom" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <form method="post" class="needs-validation">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            {% for field in form %}
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <small class="text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+                                    {% if field.errors %}
+                                        <div class="text-danger small">{{ field.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <hr class="my-4" style="opacity: 0.1;">
+
+                        <div class="d-flex align-items: center;">
+                            <button type="submit" class="btn-justice-submit">
+                                <i class="fas fa-save me-2"></i>
+                                {% if request.path == '/new' %}Ajouter le dossier{% else %}Enregistrer les modifications{% endif %}
+                            </button>
+
+                            <a href="{% url 'admin_namage_dossier' %}" class="btn btn-justice-back">
+                                <i class="fas fa-undo me-2"></i>Retour
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

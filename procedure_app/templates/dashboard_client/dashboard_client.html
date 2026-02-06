@@ -1,0 +1,319 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block body %}
+<style>
+    /* Palette de couleurs Bleu et Or */
+    :root {
+        --mon-bleu: #003366; /* Bleu profond */
+        --mon-or: #c5a059;; 
+          /* Or classique */
+        --mon-or-clair: #f4e8c1;
+    }
+
+    body, html {
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .full-height-container {
+        height: calc(100vh - 56px);
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .full-height-row {
+        flex: 1;
+        margin: 0;
+        display: flex;
+        overflow: hidden;
+    }
+    
+    .full-height-card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        height: 100%;
+        border: 1px solid var(--mon-or); /* Bordure Or */
+        border-radius: 0;
+    }
+
+    /* Personnalisation du Header de la carte */
+    .card-header {
+        background-color: var(--mon-bleu) !important;
+        color: var(--mon-or) !important;
+        border-bottom: 2px solid var(--mon-or);
+    }
+    
+    .card-body-full {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        overflow: hidden;
+    }
+    
+    .table-responsive-full {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        height: 100%;
+    }
+    
+    .table-wrapper {
+        flex: 1;
+        overflow: auto;
+        height: 100%;
+    }
+    
+    #dataTable {
+        width: 100%;
+        margin-bottom: 0;
+    }
+    
+    /* En-tête du tableau collant */
+    #dataTable thead th {
+        position: sticky;
+        top: 0;
+        background-color: var(--mon-or);
+        color: var(--mon-bleu);
+        z-index: 10;
+        border-bottom: 2px solid var(--mon-bleu);
+    }
+
+    /* Styles des boutons */
+    .btn-warning {
+        background-color: var(--mon-or) !important;
+        border-color: var(--mon-or) !important;
+        color: var(--mon-bleu) !important;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: var(--mon-bleu) !important;
+        border-color: var(--mon-bleu) !important;
+        color: var(--mon-or) !important;
+    }
+
+    .btn-success {
+        background-color: var(--mon-bleu) !important;
+        border-color: var(--mon-or) !important;
+        color: var(--mon-or) !important;
+    }
+
+    .text-primary { color: var(--mon-bleu) !important; }
+    
+    .table td, .table th {
+        vertical-align: middle;
+    }
+    
+    .dossier-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border: 2px solid var(--mon-or);
+    }
+    
+    .pagination-wrapper {
+        padding: 10px;
+        background-color: var(--mon-bleu);
+        border-top: 1px solid var(--mon-or);
+    }
+
+    .page-link {
+        color: var(--mon-bleu);
+    }
+
+    .page-item.active .page-link {
+        background-color: var(--mon-or);
+        border-color: var(--mon-or);
+        color: var(--mon-bleu);
+    }
+</style>
+
+<div class="container-fluid full-height-container">
+    <div class="row full-height-row">
+        <div class="col-sm-1" style="padding: 0; background-color: transparent;"></div>
+        
+        <div class="col-sm-12" style="padding: 15px; height: 100%; overflow: hidden;">
+            <div class="card full-height-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-table" style="color: var(--mon-or);"></i>
+                        Dossiers récemment ajoutés
+                    </div>
+
+                    <a class="btn btn-sm btn-success" href="{% url 'client_view_page_dossier_form' %}" style="padding: 8px;">
+                        <i class="fas fa-plus"></i> Ajouter un dossier
+                    </a>
+                </div>
+
+                <div class="p-3 bg-light border-bottom">
+                    <form action="{% url 'delete_request' %}" method="POST" class="row g-2 align-items-center">
+                        {% csrf_token %}
+                        <div class="col-auto">
+                            <label for="delete_request" class="form-label mb-0">ID du dossier à supprimer :</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="text" name="delete_request" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-sm btn-warning">Envoyer la demande</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="card-body card-body-full">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible mx-3 mt-2" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="table-responsive-full">
+                        <div class="table-wrapper">
+                            <table class="table table-hover table-striped" id="dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Aperçu</th>
+                                        <th>Nom complet</th>
+                                        <th>Type d'affaire</th>
+                                        <th>Conversations</th>
+                                        <th>Pièces</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if dossiers %}
+                                        {% for dossier in dossiers %}
+                                        <tr>
+                                            <td><strong>{{ dossier.id }}</strong></td>
+                                            <td>
+                                                {% if dossier.couverture_dossier %}
+                                                <img src="{{ dossier.couverture_dossier.url }}" alt="Dossier" class="dossier-image">
+                                                {% else %}
+                                                <span class="text-muted small">AUCUNE IMAGE</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ dossier.nom }}</td>
+                                            <td>{{ dossier.type_affaire }}</td>
+                                            <td>
+                                                <a href="{% url 'client_create_chat' dossier.id %}" class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-comments"></i> Chat
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#detailDossierModal{{ dossier.id }}">
+                                                    📁 Voir ({{ dossier.pieces_jointes.all|length }})
+                                                </button>
+
+                                                <div class="modal fade" id="detailDossierModal{{ dossier.id }}" tabindex="-1">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header" style="background-color: var(--mon-bleu); color: var(--mon-or);">
+                                                                <h5 class="modal-title">📁 Détails du dossier #{{ dossier.id }}</h5>
+                                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <p><strong>Nom :</strong> {{ dossier.nom }}</p>
+                                                                        <p><strong>Type :</strong> {{ dossier.type_affaire }}</p>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <p><strong>Adversaire :</strong> {{ dossier.adversaire }}</p>
+                                                                        <p><strong>Contact :</strong> {{ dossier.contact }}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <hr>
+                                                                <h6>📎 Pièces jointes</h6>
+                                                                {% if dossier.pieces_jointes.all %}
+                                                                    <ul class="list-group">
+                                                                        {% for piece in dossier.pieces_jointes.all %}
+                                                                        <li class="list-group-item d-flex justify-content-between align-items-center {% if piece.depuis_formulaire_ajout_piecejointe_dossier_par_admin %}text-primary fw-bold{% else %}text-dark{% endif %}">
+                                                                            <span>{{ piece.fichier.name|slice:"12:" }}</span>
+                                                                             <br><small class="text-muted">{{ piece.uploaded_fr }}</small>
+                                                                            <div>
+                                                                                <a href="{{ piece.fichier.url }}" target="_blank" class="btn btn-sm btn-outline-primary">Voir</a>
+                                                                                <a href="{{ piece.fichier.url }}" download class="btn btn-sm btn-primary"><i class="fa fa-download"></i></a>
+                                                                            </div>
+                                                                        </li>
+                                                                        {% endfor %}
+                                                                    </ul>
+                                                                {% else %}
+                                                                    <p class="text-muted small">Aucune pièce jointe.</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <form method="post" action="{% url 'ajouter_pieces_jointes' dossier.id %}" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    <input type="file" name="fichiers" multiple class="form-control form-control-sm mb-1" required>
+                                                    <button type="submit" class="btn btn-success btn-sm w-100">Ajouter</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center py-5">
+                                                <div class="text-muted">Aucun dossier disponible.</div>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    {% if is_paginated %}
+                    <div class="pagination-wrapper">
+                        <ul class="pagination pagination-sm justify-content-center mb-0">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Précédent</a></li>
+                            {% endif %}
+                            
+                            <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Suivant</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function() {
+        function adjustTableHeight() {
+            var windowHeight = $(window).height();
+            var headerHeight = 56;
+            var cardHeaderHeight = $('.card-header').outerHeight();
+            var searchBarHeight = $('.bg-light.border-bottom').outerHeight() || 0;
+            var paginationHeight = $('.pagination-wrapper').outerHeight() || 0;
+            
+            var availableHeight = windowHeight - headerHeight - cardHeaderHeight - searchBarHeight - paginationHeight - 40;
+            $('.table-wrapper').css('height', availableHeight + 'px');
+        }
+        
+        adjustTableHeight();
+        $(window).resize(adjustTableHeight);
+        
+        setTimeout(function() { $('.alert').fadeOut(); }, 5000);
+    });
+</script>
+{% endblock %}

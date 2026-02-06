@@ -1,0 +1,121 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block body %}
+<style>
+    :root {
+        --justice-blue: #1a365d;
+        --justice-yellow: #c5a059;
+        --justice-white: #ffffff;
+    }
+
+    .card-header {
+        background-color: var(--justice-blue) !important;
+        color: var(--justice-white) !important;
+        border-bottom: 3px solid var(--justice-yellow);
+        font-weight: bold;
+    }
+
+    .btn-justice-submit {
+        background-color: var(--justice-blue);
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-justice-submit:hover {
+        background-color: #122846;
+        color: var(--justice-yellow);
+        transform: translateY(-2px);
+    }
+
+    .form-control:focus {
+        border-color: var(--justice-blue);
+        box-shadow: 0 0 0 0.2rem rgba(26, 54, 93, 0.25);
+    }
+
+    label {
+        color: var(--justice-blue);
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .upload-section {
+        background-color: rgba(197, 160, 89, 0.05);
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px dashed var(--justice-yellow);
+    }
+</style>
+
+<div class="col-md-8 container-fluid mt-5 bg-light col-sm-10">
+    <div id="content" class="p-3 p-md-5 pt-5">
+        <div class="col-md-12 col-sm-12">
+            <div class="card mb-3 shadow">
+                <div class="card-header">
+                    <i class="fas fa-folder-plus text-warning mr-2"></i>
+                    Remplir les informations des dossiers
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'client_ajout_dossier' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="form-group mb-3">
+                            <div class="col">
+                                <label><i class="fas fa-user mr-1"></i> Nom complet</label>
+                                <input type="text" class="form-control" name="nom" placeholder="Saisir le nom complet" required="required">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <div class="col">
+                                <label><i class="fas fa-address-book mr-1"></i> Contact</label>
+                                <input type="text" class="form-control" name="contact" placeholder="Téléphone ou Email" required="required">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <div class="col">
+                                <label><i class="fas fa-gavel mr-1"></i> Type d'affaire</label>
+                                <input type="text" class="form-control" name="type_affaire" placeholder="Ex: Divorce, Litige foncier, etc." required="required">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <div class="col">
+                                <label><i class="fas fa-user-shield mr-1"></i> Nom de l'adversaire</label>
+                                <input type="text" class="form-control" name="adversaire" placeholder="Si applicable" required="required">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <div class="col">
+                                <label><i class="fas fa-align-left mr-1"></i> Description détaillée</label>
+                                <textarea name="description_affaire" class="form-control" rows="4" placeholder="Expliquez les faits ici..." required="required"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <div class="col">
+                                <div class="upload-section">
+                                    <label class="d-block mb-2"><strong>Joindre des documents légaux :</strong></label>
+                                    <p class="small text-muted mb-2">Veuillez télécharger les contrats, actes, plaintes ou toute documentation juridique pertinente (Preuve sous forme d'image ou PDF).</p>
+                                    <input type="file" id="myFile" name="couverture_dossier" class="form-control-file" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-justice-submit btn-lg btn-block shadow-sm">
+                                <i class="fas fa-check-circle mr-2"></i>Soumettre le dossier
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

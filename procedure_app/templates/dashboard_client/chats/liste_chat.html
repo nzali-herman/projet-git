@@ -1,0 +1,12 @@
+{% extends "base_dashboard.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h4 class="mb-3">💬 Ma discussion avec l’administration</h4>
+
+    <a href="{% url 'client_conversation' %}" class="btn btn-primary">
+        Ouvrir la conversation
+    </a>
+</div>
+
+{% endblock %}

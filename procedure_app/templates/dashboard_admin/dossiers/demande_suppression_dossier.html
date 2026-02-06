@@ -1,0 +1,92 @@
+{% extends 'base_dashboard.html' %}
+
+{% block title %}
+{% endblock title %}
+
+{% block body %}
+<style>
+  :root {
+      --justice-blue: #1a365d;
+      --justice-yellow: #c5a059;
+      --justice-white: #ffffff;
+      --justice-danger: #ce1126;
+  }
+   
+  /* Remplacement du style Cameroun par le style Justice */
+  .card-header-justice {
+      background-color: var(--justice-blue);
+      color: white;
+      border-bottom: 3px solid var(--justice-yellow);
+      padding: 15px 20px;
+      border-radius: 5px 5px 0 0;
+  }
+  
+  .chat-box {
+      width: 100%; 
+      background: white; 
+      box-shadow: 0 2px 5px rgba(26, 54, 93, 0.1); 
+      border-left: 4px solid var(--justice-blue);
+      padding: 15px;
+      transition: transform 0.2s;
+  }
+
+  .chat-box:hover {
+      transform: translateX(5px);
+      border-left: 4px solid var(--justice-yellow);
+  }
+
+  .no-request {
+      color: var(--justice-blue);
+      text-align: center;
+      padding: 20px;
+      font-weight: 300;
+  }
+</style>
+
+<div class="container-fluid">
+  <div class="row">
+    
+    
+    <div class="col-sm-3"></div>
+
+    <div class="col-sm-6" style="padding-top: 25px">
+      <br>
+      <div class="card-header-justice">
+          <i class="fas fa-eraser mr-2"></i> Demandes de suppression
+      </div> 
+      
+      <div class="card mb-2 border-0 shadow-sm">
+        <div class="card-body">
+          <div class="">
+            <div class="">
+              {% for feedback in feedbacks %}
+              <div class="chat-box mb-4">
+                <strong>
+                  <small class="text-dark">Requête : </small>
+                  <small class="text-danger" style="font-size: 1rem;"> {{ feedback.delete_request }}</small>
+                </strong>
+                
+                <a href="#" title="Supprimer la demande">
+                  <span class="fa fa-trash text-danger" style="float: right; font-size: 1.3em;"></span>
+                </a>
+              </div>
+
+              {% empty %}
+              <div class="no-request">
+                <i class="fas fa-info-circle fa-2x mb-3 text-muted"></i>
+                <h3 class="h5">Aucune demande de suppression</h3>
+              </div>
+              {% endfor %}
+
+              <div class="col-sm-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-2"></div>
+  </div>
+</div>
+
+{% endblock %}
