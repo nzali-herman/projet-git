@@ -533,8 +533,11 @@ def delete_request(request):
 		return redirect('client_view_list_dossier')
 	else:
 	    messages.error(request, 'La demande na pas été envoyée.')
+     
+     
+     
 	           
-  # fonctions ia #          
+   # fonctions ia #          
             
 from django.http import JsonResponse
 import json
@@ -634,3 +637,415 @@ def chatbot_api(request):
             'reponse': f'Erreur: {type(e).__name__}',
             'success': False
         })
+        
+        
+        
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.contrib import messages
+from .models import Dossier, AnalyseJuridique, ChatQuestion
+from .services.groq_service import AnalyseJuridiqueService
+from .services.chat_service import ChatJuridiqueService
+import re
+
+@login_required
+def analyser_dossier_ia(request, dossier_id):
+    dossier = get_object_or_404(Dossier, id=dossier_id)
+    
+    if request.method == 'POST':
+        try:
+            service = AnalyseJuridiqueService()
+            analyse_text = service.generer_analyse(dossier)
+            
+            if analyse_text:
+                sections = _parser_reponse_ia(analyse_text)
+                
+                # Debug: Afficher les sections extraites
+                print("=== SECTIONS PARSÉES ===")
+                for key, value in sections.items():
+                    print(f"{key}: {value[:100]}...")
+                
+                # Si aucune section n'a de contenu, utiliser le texte complet
+                if not any(sections.values()):
+                    sections['nature_juridique'] = analyse_text[:2000]
+                
+                analyse = AnalyseJuridique.objects.create(
+                    dossier=dossier,
+                    nature_juridique=sections.get('nature_juridique', ''),
+                    demarches_recommandees=sections.get('demarches_recommandees', ''),
+                    delais_importants=sections.get('delais_importants', ''),
+                    recommandations=sections.get('recommandations', ''),
+                    procedure_complete=sections.get('procedure_complete', ''),
+                    risques_juridiques=sections.get('risques_juridiques', ''),
+                    textes_applicables=sections.get('textes_applicables', ''),
+                    questions_frequentes=sections.get('questions_frequentes', '')
+                )
+                
+                messages.success(request, "Analyse juridique générée avec succès!")
+                return redirect('voir_analyse_juridique', dossier_id=dossier_id)
+            else:
+                messages.error(request, "L'IA n'a pas pu générer d'analyse. Veuillez réessayer.")
+                return render(request, 'analyser_dossier.html', {'dossier': dossier})
+                
+        except Exception as e:
+            print(f"Erreur dans analyser_dossier_ia: {e}")
+            messages.error(request, f"Une erreur est survenue: {str(e)}")
+            return render(request, 'analyser_dossier.html', {'dossier': dossier})
+    
+    return render(request, 'analyser_dossier.html', {'dossier': dossier})
+
+def _parser_reponse_ia(texte):
+    """Parse la réponse de l'IA pour extraire les sections"""
+    sections = {
+        'nature_juridique': '',
+        'demarches_recommandees': '',
+        'delais_importants': '',
+        'recommandations': '',
+        'procedure_complete': '',
+        'risques_juridiques': '',
+        'textes_applicables': '',
+        'questions_frequentes': ''
+    }
+    
+    if not texte or not texte.strip():
+        return sections
+    
+    texte = texte.strip()
+    
+    # Dictionnaire de mapping pour les titres de sections
+    section_patterns = {
+        'nature_juridique': [
+            '1. NATURE JURIDIQUE', 'NATURE JURIDIQUE', '1. NATURE',
+            '1. Nature juridique', 'Nature juridique'
+        ],
+        'demarches_recommandees': [
+            '2. DÉMARCHES RECOMMANDÉES', 'DÉMARCHES RECOMMANDÉES', '2. DÉMARCHES',
+            '2. Démarches recommandées', 'Démarches recommandées'
+        ],
+        'delais_importants': [
+            '3. DÉLAIS IMPORTANTS', 'DÉLAIS IMPORTANTS', '3. DÉLAIS',
+            '3. Délais importants', 'Délais importants'
+        ],
+        'recommandations': [
+            '4. RECOMMANDATIONS', 'RECOMMANDATIONS', '4. RECOMMANDATIONS',
+            '4. Recommandations', 'Recommandations'
+        ],
+        'procedure_complete': [
+            '5. PROCÉDURE COMPLÈTE', 'PROCÉDURE COMPLÈTE', '5. PROCÉDURE',
+            '5. Procédure complète', 'Procédure complète'
+        ],
+        'risques_juridiques': [
+            '6. RISQUES JURIDIQUES', 'RISQUES JURIDIQUES', '6. RISQUES',
+            '6. Risques juridiques', 'Risques juridiques'
+        ],
+        'textes_applicables': [
+            '7. TEXTES APPLICABLES', 'TEXTES APPLICABLES', '7. TEXTES',
+            '7. Textes applicables', 'Textes applicables'
+        ],
+        'questions_frequentes': [
+            '8. QUESTIONS FRÉQUENTES', 'QUESTIONS FRÉQUENTES', '8. QUESTIONS',
+            '8. Questions fréquentes', 'Questions fréquentes'
+        ]
+    }
+    
+    # Diviser en lignes
+    lines = texte.split('\n')
+    current_section = None
+    section_started = False
+    
+    for line in lines:
+        line_stripped = line.strip()
+        
+        # Rechercher si cette ligne est un titre de section
+        found_section = False
+        for section_name, patterns in section_patterns.items():
+            for pattern in patterns:
+                if pattern in line_stripped.upper() or pattern in line_stripped:
+                    current_section = section_name
+                    section_started = True
+                    found_section = True
+                    break
+            if found_section:
+                break
+        
+        # Si ce n'est pas un titre, ajouter au contenu
+        if not found_section and current_section and section_started:
+            # Vérifier si c'est le début d'une nouvelle section sans titre explicite
+            if line_stripped and len(line_stripped) < 100 and any(
+                line_stripped.upper().startswith(f"{i}.") 
+                for i in range(1, 9)
+            ):
+                # C'est probablement une nouvelle section, arrêter la précédente
+                section_started = False
+                continue
+            
+            if sections[current_section]:
+                sections[current_section] += '\n' + line_stripped
+            else:
+                sections[current_section] = line_stripped
+    
+    # Nettoyer les sections
+    for key in sections:
+        if sections[key]:
+            # Supprimer les numéros de début de ligne
+            sections[key] = '\n'.join([
+                line.strip() for line in sections[key].split('\n') 
+                if line.strip() and not any(line.strip().startswith(f"{i}.") for i in range(1, 9))
+            ]).strip()
+    
+    # Si aucune section n'est remplie, utiliser une approche plus simple
+    if not any(sections.values()):
+        # Essayer de diviser par les numéros
+        parts = texte.split('\n\n')
+        for i, part in enumerate(parts):
+            if i == 0:
+                sections['nature_juridique'] = part.strip()
+            elif i == 1:
+                sections['demarches_recommandees'] = part.strip()
+            elif i == 2:
+                sections['delais_importants'] = part.strip()
+            elif i == 3:
+                sections['recommandations'] = part.strip()
+            elif i == 4:
+                sections['procedure_complete'] = part.strip()
+            elif i == 5:
+                sections['risques_juridiques'] = part.strip()
+            elif i == 6:
+                sections['textes_applicables'] = part.strip()
+            elif i == 7:
+                sections['questions_frequentes'] = part.strip()
+    
+    return sections
+@login_required
+def voir_analyse_juridique(request, dossier_id):
+    dossier = get_object_or_404(Dossier, id=dossier_id)
+    analyse = AnalyseJuridique.objects.filter(dossier=dossier).first()
+    
+    return render(request, 'voir_analyse.html', {
+        'dossier': dossier,
+        'analyse': analyse
+    })
+
+@login_required
+def chat_analyse(request, analyse_id):
+    analyse = get_object_or_404(AnalyseJuridique, id=analyse_id)
+    
+    if request.method == 'POST':
+        question = request.POST.get('question', '')
+        
+        if question:
+            chat_service = ChatJuridiqueService()
+            reponse = chat_service.poser_question(analyse, question)
+            
+            ChatQuestion.objects.create(
+                analyse=analyse,
+                question=question,
+                reponse=reponse
+            )
+            
+            return JsonResponse({
+                'success': True,
+                'reponse': reponse
+            })
+    
+    questions = ChatQuestion.objects.filter(analyse=analyse).order_by('date_question')
+    
+    return render(request, 'chat_analyse.html', {
+        'analyse': analyse,
+        'questions': questions
+    })
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.contrib import messages
+import re
+from .models import Dossier, AnalyseJuridique, ChatQuestion
+from .services.groq_service import AnalyseJuridiqueService
+from .services.chat_service import ChatJuridiqueService
+
+@login_required
+def analyser_dossier_ia(request, dossier_id):
+    """Analyse un dossier avec l'IA"""
+    dossier = get_object_or_404(Dossier, id=dossier_id)
+    
+    if request.method == 'POST':
+        try:
+            # Générer l'analyse avec l'IA
+            service = AnalyseJuridiqueService()
+            analyse_text = service.generer_analyse(dossier)
+            
+            if analyse_text:
+                # Parser la réponse de l'IA
+                sections = _parser_reponse_ia(analyse_text)
+                
+                # Supprimer les anciennes analyses pour ce dossier pour éviter les doublons
+                AnalyseJuridique.objects.filter(dossier=dossier).delete()
+                
+                # Créer une nouvelle analyse
+                analyse = AnalyseJuridique.objects.create(
+                    dossier=dossier,
+                    nature_juridique=sections.get('nature_juridique', ''),
+                    demarches_recommandees=sections.get('demarches_recommandees', ''),
+                    delais_importants=sections.get('delais_importants', ''),
+                    recommandations=sections.get('recommandations', ''),
+                    procedure_complete=sections.get('procedure_complete', ''),
+                    risques_juridiques=sections.get('risques_juridiques', ''),
+                    textes_applicables=sections.get('textes_applicables', ''),
+                    questions_frequentes=sections.get('questions_frequentes', '')
+                )
+                
+                messages.success(request, "Analyse juridique générée avec succès !")
+                return redirect('voir_analyse_juridique', dossier_id=dossier_id)
+            else:
+                messages.error(request, "L'IA n'a pas pu générer d'analyse. Veuillez réessayer.")
+                return render(request, 'analyser_dossier.html', {'dossier': dossier})
+                
+        except Exception as e:
+            print(f"Erreur lors de l'analyse IA: {e}")
+            messages.error(request, f"Erreur lors de l'analyse: {str(e)}")
+            return render(request, 'analyser_dossier.html', {'dossier': dossier})
+    
+    return render(request, 'analyser_dossier.html', {'dossier': dossier})
+
+def _parser_reponse_ia(texte):
+    """Parse la réponse de l'IA pour extraire les sections"""
+    sections = {
+        'nature_juridique': '',
+        'demarches_recommandees': '',
+        'delais_importants': '',
+        'recommandations': '',
+        'procedure_complete': '',
+        'risques_juridiques': '',
+        'textes_applicables': '',
+        'questions_frequentes': ''
+    }
+    
+    if not texte or not texte.strip():
+        return sections
+    
+    texte = texte.strip()
+    
+    # Recherche simple des sections
+    lines = texte.split('\n')
+    current_section = None
+    
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        
+        # Détection des titres de sections (plus flexible)
+        line_upper = line.upper()
+        if '1. NATURE JURIDIQUE' in line_upper or 'NATURE JURIDIQUE' in line_upper:
+            current_section = 'nature_juridique'
+            continue
+        elif '2. DÉMARCHES RECOMMANDÉES' in line_upper or 'DÉMARCHES RECOMMANDÉES' in line_upper:
+            current_section = 'demarches_recommandees'
+            continue
+        elif '3. DÉLAIS IMPORTANTS' in line_upper or 'DÉLAIS IMPORTANTS' in line_upper:
+            current_section = 'delais_importants'
+            continue
+        elif '4. RECOMMANDATIONS' in line_upper or 'RECOMMANDATIONS' in line_upper:
+            current_section = 'recommandations'
+            continue
+        elif '5. PROCÉDURE COMPLÈTE' in line_upper or 'PROCÉDURE COMPLÈTE' in line_upper:
+            current_section = 'procedure_complete'
+            continue
+        elif '6. RISQUES JURIDIQUES' in line_upper or 'RISQUES JURIDIQUES' in line_upper:
+            current_section = 'risques_juridiques'
+            continue
+        elif '7. TEXTES APPLICABLES' in line_upper or 'TEXTES APPLICABLES' in line_upper:
+            current_section = 'textes_applicables'
+            continue
+        elif '8. QUESTIONS FRÉQUENTES' in line_upper or 'QUESTIONS FRÉQUENTES' in line_upper:
+            current_section = 'questions_frequentes'
+            continue
+        
+        # Ajouter le contenu à la section courante
+        if current_section and current_section in sections:
+            if sections[current_section]:
+                sections[current_section] += '\n' + line
+            else:
+                sections[current_section] = line
+    
+    # Si aucune section n'est trouvée, mettre tout dans nature_juridique
+    if not any(sections.values()) and texte:
+        sections['nature_juridique'] = texte
+    
+    return sections
+
+@login_required
+def voir_analyse_juridique(request, dossier_id):
+    """Affiche l'analyse juridique d'un dossier"""
+    dossier = get_object_or_404(Dossier, id=dossier_id)
+    
+    # Utiliser first() au lieu de get() pour éviter l'erreur
+    analyse = AnalyseJuridique.objects.filter(dossier=dossier).first()
+    
+    # Si aucune analyse existe, rediriger vers la génération
+    if not analyse:
+        messages.info(request, "Aucune analyse disponible. Génération d'une analyse...")
+        return redirect('analyser_dossier_ia', dossier_id=dossier_id)
+    
+    return render(request, 'voir_analyse.html', {
+        'dossier': dossier,
+        'analyse': analyse
+    })
+
+@login_required
+def chat_analyse(request, analyse_id):
+    """Interface de chat pour poser des questions sur l'analyse"""
+    analyse = get_object_or_404(AnalyseJuridique, id=analyse_id)
+    
+    if request.method == 'POST':
+        question = request.POST.get('question', '').strip()
+        
+        if question:
+            try:
+                chat_service = ChatJuridiqueService()
+                reponse = chat_service.poser_question(analyse, question)
+                
+                # Sauvegarder la question/réponse
+                ChatQuestion.objects.create(
+                    analyse=analyse,
+                    question=question,
+                    reponse=reponse
+                )
+                
+                return JsonResponse({
+                    'success': True,
+                    'reponse': reponse
+                })
+            except Exception as e:
+                print(f"Erreur dans le chat: {e}")
+                return JsonResponse({
+                    'success': False,
+                    'reponse': "Désolé, une erreur est survenue. Veuillez réessayer."
+                })
+        
+        return JsonResponse({
+            'success': False,
+            'reponse': "Veuillez saisir une question."
+        })
+    
+    # GET : afficher l'historique
+    questions = ChatQuestion.objects.filter(analyse=analyse).order_by('date_question')
+    
+    return render(request, 'chat_analyse.html', {
+        'analyse': analyse,
+        'questions': questions,
+        'dossier': analyse.dossier
+    })
+
+@login_required
+def regenerer_analyse(request, dossier_id):
+    """Regénère l'analyse juridique"""
+    dossier = get_object_or_404(Dossier, id=dossier_id)
+    
+    # Supprimer les anciennes analyses
+    AnalyseJuridique.objects.filter(dossier=dossier).delete()
+    
+    messages.info(request, "Régénération de l'analyse en cours...")
+    return redirect('analyser_dossier_ia', dossier_id=dossier_id)

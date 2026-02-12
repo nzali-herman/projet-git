@@ -26,15 +26,49 @@ class Dossier(models.Model):
     contact = models.CharField(max_length=100) 
     type_affaire = models.CharField(max_length=100) 
     adversaire = models.CharField(max_length=200) 
-    description_affaire = models.CharField(max_length=100)  
-
-    # L'utilisateur qui télécharge le dossier
-    telecharger_par = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dossiers')
+    description_affaire = models.TextField()  # Changé en TextField pour plus de contenu
     
+    telecharger_par = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dossiers')
     couverture_dossier = models.ImageField(upload_to='covers/', null=True, blank=True)
-
+    
+   
     def __str__(self):
         return self.nom
+
+
+# Ajouter après la classe Dossier existante
+
+
+class AnalyseJuridique(models.Model):
+    dossier = models.ForeignKey(Dossier, on_delete=models.CASCADE, related_name='analyses_juridiques')
+    nature_juridique = models.TextField(default='')
+    demarches_recommandees = models.TextField(default='')
+    delais_importants = models.TextField(default='')
+    recommandations = models.TextField(default='')
+    procedure_complete = models.TextField(default='')
+    risques_juridiques = models.TextField(blank=True, default='')
+    textes_applicables = models.TextField(blank=True, default='')
+    questions_frequentes = models.TextField(blank=True, default='')
+    date_creation = models.DateTimeField(auto_now_add=True)
+    derniere_mise_a_jour = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Analyse pour {self.dossier.nom}"
+
+class ChatQuestion(models.Model):
+    analyse = models.ForeignKey(AnalyseJuridique, on_delete=models.CASCADE, related_name='questions')
+    question = models.TextField(default='')
+    reponse = models.TextField(default='')
+    date_question = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Q: {self.question[:50]}..."
+
+
+
+# Ajoutez ces modèles après votre modèle Dossier existant
+
+
 
 # classe pour les pièces jointes #
 class PieceJointe(models.Model):

@@ -63,6 +63,13 @@ urlpatterns = [
    path('chatbot-api/', views.chatbot_api, name='chatbot_api'),
 
 
- 
+   # Vos URLs existantes...
     
+    
+    # Nouveaux endpoints pour l'IA
+    path('dossier/<int:dossier_id>/analyser/', views.analyser_dossier_ia, name='analyser_dossier_ia'),
+    path('dossier/<int:dossier_id>/analyse/', views.voir_analyse_juridique, name='voir_analyse_juridique'),
+    path('analyse/<int:analyse_id>/chat/', views.chat_analyse, name='chat_analyse'),
+    
+  
 ]

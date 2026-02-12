@@ -1,0 +1,204 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block body %}
+<style>
+    .section-card {
+        border-left: 4px solid #1a365d;
+        margin-bottom: 20px;
+        transition: all 0.3s;
+    }
+    .section-card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .section-header {
+        background-color: #f8f9fa;
+        color: #1a365d;
+        border-bottom: 2px solid #c5a059;
+        font-weight: 600;
+    }
+    .section-title {
+        color: #1a365d;
+        border-bottom: 2px solid #c5a059;
+        padding-bottom: 8px;
+        margin-bottom: 15px;
+    }
+    .text-preformatted {
+        white-space: pre-wrap;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0">
+                                <i class="fas fa-gavel"></i>
+                                ANALYSE JURIDIQUE - Dossier #{{ dossier.id }}
+                            </h4>
+                            <small class="opacity-75">{{ dossier.nom }} vs {{ dossier.adversaire }}</small>
+                        </div>
+                        <div>
+                            <a href="{% url 'admin_view_list_dossiers_clients' %}" class="btn btn-light btn-sm me-2">
+                                <i class="fas fa-arrow-left"></i> Retour
+                            </a>
+                            <a href="{% url 'chat_analyse' analyse.id %}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-comments"></i> Poser une question
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p><strong>Type d'affaire:</strong><br>
+                            <span class="badge bg-dark">{{ dossier.type_affaire }}</span></p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>Demandeur:</strong><br>{{ dossier.nom }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p><strong>Adversaire:</strong><br>{{ dossier.adversaire }}</p>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <p><strong>Description:</strong></p>
+                            <div class="border p-3 bg-light rounded">
+                                {{ dossier.description_affaire|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if analyse %}
+            <div class="card">
+                <div class="card-header section-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-contract text-primary"></i>
+                        RAPPORT D'ANALYSE JURIDIQUE
+                    </h5>
+                    <small class="text-muted">Généré le {{ analyse.date_creation|date:"d/m/Y H:i" }}</small>
+                </div>
+                <div class="card-body">
+                    <!-- 1. Nature Juridique -->
+                    <div class="card section-card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0 section-title">
+                                <i class="fas fa-balance-scale text-primary me-2"></i>
+                                1. NATURE JURIDIQUE
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-preformatted">{{ analyse.nature_juridique }}</div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Démarches Recommandées -->
+                    <div class="card section-card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0 section-title">
+                                <i class="fas fa-tasks text-primary me-2"></i>
+                                2. DÉMARCHES RECOMMANDÉES
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-preformatted">{{ analyse.demarches_recommandees }}</div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Délais Importants -->
+                    <div class="card section-card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0 section-title">
+                                <i class="fas fa-clock text-primary me-2"></i>
+                                3. DÉLAIS IMPORTANTS
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-preformatted">{{ analyse.delais_importants }}</div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Recommandations -->
+                    <div class="card section-card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0 section-title">
+                                <i class="fas fa-lightbulb text-primary me-2"></i>
+                                4. RECOMMANDATIONS
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-preformatted">{{ analyse.recommandations }}</div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Procédure Complète -->
+                    <div class="card section-card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0 section-title">
+                                <i class="fas fa-list-ol text-primary me-2"></i>
+                                5. PROCÉDURE COMPLÈTE
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-preformatted">{{ analyse.procedure_complete }}</div>
+                        </div>
+                    </div>
+
+                    <!-- 6. Risques Juridiques -->
+                    <div class="card section-card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0 section-title">
+                                <i class="fas fa-exclamation-triangle text-primary me-2"></i>
+                                6. RISQUES JURIDIQUES
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-preformatted">{{ analyse.risques_juridiques }}</div>
+                        </div>
+                    </div>
+
+                    <!-- 7. Textes Applicables -->
+                    <div class="card section-card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0 section-title">
+                                <i class="fas fa-book text-primary me-2"></i>
+                                7. TEXTES APPLICABLES
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-preformatted">{{ analyse.textes_applicables }}</div>
+                        </div>
+                    </div>
+
+                    <!-- 8. Questions Fréquentes -->
+                    <div class="card section-card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0 section-title">
+                                <i class="fas fa-question-circle text-primary me-2"></i>
+                                8. QUESTIONS FRÉQUENTES
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-preformatted">{{ analyse.questions_frequentes }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Aucune analyse juridique disponible pour ce dossier.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

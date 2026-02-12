@@ -24,7 +24,7 @@
 
    /* MISE À JOUR : Couleur Header Card (Bleu Nuit Justice) */
    .card-header {
-       background: linear-gradient(135deg, #1a365d 0%, #2a4365 100%) !important;
+       background: #c5a059 !important;
        color: white !important;
        border-bottom: 2px solid #c5a059 !important;
        font-weight: 600;
@@ -76,6 +76,10 @@
    .btn-primary {
        background-color: #1a365d !important;
        border-color: #1a365d !important;
+   }
+   .btn-warning {
+       background-color: #a38445 !important;
+       border-color: #a38445 !important;
    }
 
    /* MISE À JOUR : Badge Total (Style Justice) */
@@ -214,7 +218,7 @@
                             <i class="fas fa-folder-open"></i> Ouvrir
                         </button>
 
-                        <div class="modal fade" id="detailDossierModal{{ dossier.id }}" tabindex="-1">
+                        {% comment %} <div class="modal fade" id="detailDossierModal{{ dossier.id }}" tabindex="-1">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header bg-primary text-white">
@@ -233,6 +237,9 @@
                                             </div>
                                         </div>
                                         <p><strong>Description :</strong> {{ dossier.description_affaire }}</p>
+                                        
+                                           
+                                            {% endif %}
                                         <hr>
                                         <h6><i class="fas fa-paperclip mr-2 text-primary"></i>Pièces jointes</h6>
                                         {% if dossier.pieces_jointes.all %}
@@ -260,7 +267,94 @@
                                     </div>
                                 </div>
                             </div>
+                        </div> {% endcomment %}
+                        <!-- MODIFICATION DU MODAL EXISTANT -->
+<div class="modal fade" id="detailDossierModal{{ dossier.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">📁 Dossier N° {{ dossier.id }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Nom :</strong> {{ dossier.nom }}</p>
+                        <p><strong>Contact :</strong> {{ dossier.contact }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Type d'affaire :</strong> {{ dossier.type_affaire }}</p>
+                        <p><strong>Adversaire :</strong> {{ dossier.adversaire }}</p>
+                    </div>
+                </div>
+                
+                <!-- SECTION DESCRIPTION AVEC LIEN VERS ARTICLES -->
+                <div class="mt-3 mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <strong>Description :</strong>
+                         <div>
+                            {% if dossier.analyses_juridiques.exists %}
+                            <a href="{% url 'analyser_dossier_ia' dossier.id %}" 
+                            target="_blank" 
+                            class="btn btn-sm btn-warning">
+                                <i class="fas fa-gavel me-1"></i> Voir l'analyse juridique
+                            </a>
+                            {% else %}
+                            <a href="{% url 'analyser_dossier_ia' dossier.id %}" 
+                            class="btn btn-sm btn-warning">
+                                <i class="fas fa-robot me-1"></i> Analyser avec LIA
+                            </a>
+                            {% endif %}
                         </div>
+                    </div>
+                    <div class="border p-3 bg-light rounded" style="max-height: 150px; overflow-y: auto;">
+                        {{ dossier.description_affaire|linebreaks }}
+                    </div>
+                    
+                    <!-- Indicateur d'analyse existante -->
+                    {% if dossier.analyses_juridiques.exists %}
+                    <div class="mt-2 text-end">
+                        <small class="text-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            Analyse juridique disponible
+                            <a href="{% url 'voir_analyse_juridique' dossier.id %}" 
+                               target="_blank" 
+                               class="text-decoration-none ms-2">
+                                <i class="fas fa-eye me-1"></i>Consulter
+                            </a>
+                        </small>
+                    </div>
+                    {% endif %}
+                </div>
+                <hr>
+                
+                <h6><i class="fas fa-paperclip mr-2 text-primary"></i>Pièces jointes</h6>
+                {% if dossier.pieces_jointes.all %}
+                    <ul class="list-group list-group-flush">
+                        {% for piece in dossier.pieces_jointes.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center {% if piece.depuis_formulaire_ajout_piecejointe_dossier_par_admin %}text-primary fw-bold{% else %}text-dark{% endif %}">
+                                <div>
+                                    <i class="fas fa-file-pdf text-danger mr-2"></i>
+                                    {{ piece.fichier.name|slice:"12:" }}
+                                    <br><small class="text-muted">{{ piece.uploaded_fr }}</small>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="{{ piece.fichier.url }}" target="_blank" class="btn btn-sm btn-outline-primary">Voir</a>
+                                    <a href="{{ piece.fichier.url }}" download class="btn btn-sm btn-primary"><i class="fas fa-download"></i></a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">Aucune pièce jointe</p>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
                       </td>
                       <td>
                         <span class="total-pieces-badge">
